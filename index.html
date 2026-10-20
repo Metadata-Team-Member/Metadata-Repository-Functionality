@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Metadata Repository Functionality · How does it work?</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header class="top-bar">
+        <div class="logo">MV64-2 <span class="logo-sub">How does it work?</span></div>
+        <form id="ask-form" class="ask" role="search" autocomplete="off">
+            <label for="ask-input" class="visually-hidden">Ask a question</label>
+            <input id="ask-input" type="search" placeholder="Ask how something works, e.g. “How do establishment filters work?”" spellcheck="false">
+            <button type="submit" class="btn-primary">Ask</button>
+        </form>
+    </header>
+
+    <div class="main">
+        <aside class="sidebar" aria-label="Topics">
+            <div class="sidebar-top">
+                <label for="topic-filter" class="visually-hidden">Filter topics</label>
+                <input id="topic-filter" type="search" placeholder="Filter topics…" spellcheck="false">
+                <div id="topic-count" class="muted small"></div>
+            </div>
+            <nav id="topic-list" class="topic-list"></nav>
+        </aside>
+
+        <main id="panel" class="panel" tabindex="-1" aria-live="polite">
+            <noscript><p class="muted">Turn on JavaScript to use this guide.</p></noscript>
+        </main>
+    </div>
+
+    <footer class="footer">
+        <span id="footer-version"></span>
+        <span class="sep">·</span>
+        <span id="footer-updated"></span>
+        <span class="sep">·</span>
+        <span class="muted">Explains behaviour for users. Ask a Data Custodian or Admin if something looks different on your screen.</span>
+    </footer>
+
+    <script src="data/topics.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
