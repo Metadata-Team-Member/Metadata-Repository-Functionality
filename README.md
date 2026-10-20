@@ -13,7 +13,7 @@ tips, and (for technical topics) what is under the hood.
   storage, roles, releases). Technical topics explain concepts, technologies and patterns,
   without internal locations, names or code.
 
-Current content: **guide v1.2.0, written for Metadata Repository app release 1.2.9**
+Current content: **guide v1.2.1, written for Metadata Repository app release 1.2.9**
 (43 user topics, 31 technical topics). The version is recorded here only; the page has no footer.
 
 ## How to use it
@@ -22,6 +22,8 @@ Current content: **guide v1.2.0, written for Metadata Repository app release 1.2
 - **Ask a question** and press Enter or **Ask**. The best-matching topic appears below the box.
   If nothing matches well enough, you see a single line: "No match — try rephrasing."
 - Press `/` anywhere to jump to the question box.
+- Click **×** (shown only when there is text, set well apart from Ask) or press **Esc** in the box
+  to clear the question and the answer and return to the empty page with a clean link.
 - After you ask, the address bar holds a shareable link, for example
   `index.html?q=how%20does%20the%20toolbar%20work#t-toolbar`. Links work in either form:
   `index.html?q=how do filters work` (asks the question) or `index.html#est-filters` (opens that topic).

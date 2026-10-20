@@ -15,8 +15,10 @@
 
         <form id="ask-form" class="ask" role="search" autocomplete="off">
             <label for="ask-input" class="visually-hidden">Ask a question</label>
-            <input id="ask-input" type="search" placeholder="e.g. How does the toolbar work?" spellcheck="false" autofocus>
-            <button type="submit" class="ask-btn" aria-label="Ask">Ask</button>
+            <input id="ask-input" type="text" enterkeyhint="search" placeholder="e.g. How does the toolbar work?" spellcheck="false" autofocus>
+            <button type="button" id="clear-btn" class="clear-btn" aria-label="Clear question and answer" title="Clear (Esc)" hidden>&times;</button>
+            <span class="ask-divider" aria-hidden="true"></span>
+            <button type="submit" class="ask-btn">Ask</button>
         </form>
 
         <div id="answer" class="answer" aria-live="polite"></div>

@@ -13,6 +13,7 @@
     var answerEl = $('answer');
     var askForm = $('ask-form');
     var askInput = $('ask-input');
+    var clearBtn = $('clear-btn');
     var MIN_SCORE = 3;
 
     // ------------------------------------------------------------------ text helpers
@@ -208,11 +209,41 @@
         return best ? best.id : null;
     }
 
+    // Show the clear button only when there is text in the box.
+    function syncClear() {
+        if (clearBtn) clearBtn.hidden = !askInput.value;
+    }
+
+    // Back to the empty state: no text, no answer, clean URL, focus in the box.
+    function clearAll() {
+        askInput.value = '';
+        syncClear();
+        clearAnswer();
+        setUrl('', '');
+        askInput.focus();
+    }
+
     // ------------------------------------------------------------------ events
     askForm.addEventListener('submit', function (e) {
         e.preventDefault();
         ask(askInput.value);
     });
+
+    askInput.addEventListener('input', syncClear);
+
+    askInput.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' || e.key === 'Esc') {
+            e.preventDefault();
+            clearAll();
+        }
+    });
+
+    if (clearBtn) {
+        clearBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+            clearAll();
+        });
+    }
 
     document.addEventListener('keydown', function (e) {
         if (e.key === '/' && document.activeElement !== askInput) {
@@ -223,13 +254,14 @@
     });
 
     // Console hook for checking matches: __guide.rank('your question').
-    window.__guide = { rank: rank, ask: ask, show: showTopic };
+    window.__guide = { rank: rank, ask: ask, show: showTopic, clear: clearAll };
 
     // ------------------------------------------------------------------ start: empty until asked
     var hashId = decodeURIComponent((location.hash || '').replace(/^#/, ''));
     var qMatch = /[?&]q=([^&#]*)/.exec(location.search || '');
     var q0 = qMatch ? decodeURIComponent(qMatch[1].replace(/\+/g, ' ')) : '';
     if (q0) askInput.value = q0;
+    syncClear();
     if (byId[hashId]) showTopic(hashId);
     else if (q0) ask(q0, { noUrl: true });
 })();

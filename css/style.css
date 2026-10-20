@@ -88,7 +88,34 @@ body.has-answer .page { padding-top: 9vh; }
     padding: 12px 0;
 }
 .ask input::placeholder { color: #666; }
-.ask input::-webkit-search-cancel-button { filter: invert(0.6); }
+.clear-btn {
+    flex: 0 0 auto;
+    width: 40px;
+    height: 40px;
+    margin-left: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    color: var(--muted);
+    border: none;
+    border-radius: 50%;
+    font: inherit;
+    font-size: 1.5rem;
+    line-height: 1;
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease;
+}
+.clear-btn[hidden] { display: none; }
+.clear-btn:hover { background: #262626; color: var(--strong); }
+.clear-btn:focus-visible { outline: 2px solid var(--green-soft); outline-offset: 1px; }
+.ask-divider {
+    flex: 0 0 auto;
+    width: 1px;
+    height: 28px;
+    background: var(--border-2);
+    margin: 0 20px 0 12px;
+}
 .ask-btn {
     flex: 0 0 auto;
     background: var(--green);
@@ -183,6 +210,8 @@ body.has-answer .page { padding-top: 9vh; }
     body.has-answer .page { padding-top: 5vh; }
     .ask { padding-left: 16px; }
     .ask-btn { padding: 10px 16px; }
+    .ask-divider { margin: 0 14px 0 8px; }
+    .clear-btn { margin-left: 4px; }
 }
 
 @media print {
