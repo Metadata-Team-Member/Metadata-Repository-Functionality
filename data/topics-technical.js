@@ -1,5 +1,5 @@
 /* Metadata Repository Functionality: technical topics (audience: "technical").
-   Written for developers and technical audiences from the MV64-2 1.2.9 release.
+   Written for developers and technical audiences from the Metadata Repository app (release 1.2.9).
    Concepts, technologies and patterns only. Never add share paths, drive letters, server names,
    web addresses, user names, credentials, licence text, source code, or exact internal
    file, class or command names. No Easter eggs. The admin area gets one line in the overview only. */
@@ -24,7 +24,7 @@ window.TOPICS.push(
     audience: "technical",
     area: "Tech: How it's built",
     title: "The tech stack at a glance",
-    summary: "MV64-2 is a Windows desktop app written in C# on .NET 8, with a WPF window that hosts a modern web UI (HTML, CSS and JavaScript) through WebView2.",
+    summary: "The Metadata Repository is a Windows desktop app written in C# on .NET 8, with a WPF window that hosts a modern web UI (HTML, CSS and JavaScript) through WebView2.",
     keywords: ["tech stack", "stack", "built with", "built in", "technology", "technologies", "framework", "language", "languages", "platform"],
     synonyms: ["what is it built in", "what is it built with", "what is it written in", "what language", "what framework", "how is it made", "tools used"],
     steps: [
@@ -46,7 +46,7 @@ window.TOPICS.push(
     ],
     who: "Technical audiences. Nothing here changes how users work.",
     tips: [
-        "Think of MV64-2 as a small website that runs inside its own private browser, with a C# back office next to it on your PC.",
+        "Think of the Metadata Repository app as a small website that runs inside its own private browser, with a C# back office next to it on your PC.",
         "There is no web server or central database for the repository itself. Data lives as JSON files in a shared folder."
     ],
     under: ["C# / .NET 8", "WPF + XAML", "WebView2 (Chromium)", "HTML / CSS / JavaScript", "JSON", "Velopack", "SQL Server client", "EPPlus", "CodeMirror", "highlight.js"],
@@ -68,7 +68,7 @@ window.TOPICS.push(
     ],
     who: "Technical audiences.",
     tips: [
-        "“Backend” in MV64-2 means this local C# host on each PC, not a server.",
+        "“Backend” in the Metadata Repository app means this local C# host on each PC, not a server.",
         "The project targets Windows only, because WPF and WebView2 are Windows technologies."
     ],
     under: [".NET 8 (Windows)", "C# partial classes", "System.Text.Json", "async/await"],
@@ -79,11 +79,11 @@ window.TOPICS.push(
     audience: "technical",
     area: "Tech: How it's built",
     title: "WPF and XAML",
-    summary: "WPF is the Windows desktop toolkit that provides MV64-2's window, and XAML is the markup that describes that window.",
+    summary: "WPF is the Windows desktop toolkit that provides the Metadata Repository app's window, and XAML is the markup that describes that window.",
     keywords: ["wpf", "xaml", "window", "windows presentation foundation", "splash", "window chrome", "desktop ui"],
     synonyms: ["what is xaml", "what is wpf", "native window", "title bar buttons", "maximise", "maximize"],
     steps: [
-        "XAML is an XML-based markup language. MV64-2 uses it to declare the main window, the splash screen and the styles of the window buttons.",
+        "XAML is an XML-based markup language. The Metadata Repository app uses it to declare the main window, the splash screen and the styles of the window buttons.",
         "The main window is borderless: it draws its own minimise, maximise and close buttons in the dark theme, and a small helper makes it maximise exactly into the monitor's work area, taskbar included, on any screen or scaling.",
         "Almost the whole window is one WebView2 control, so the visible app is web content.",
         "WPF still supplies native pieces: the splash screen (version and update status), Windows Save and Open dialogs, folder pickers, and the startup “repository unavailable” dialog.",
@@ -92,7 +92,7 @@ window.TOPICS.push(
     who: "Technical audiences.",
     tips: [
         "If you know HTML, XAML will feel familiar: nested elements with attributes, but for desktop controls.",
-        "Most UI work in MV64-2 happens in HTML and CSS, not XAML."
+        "Most UI work in the Metadata Repository app happens in HTML and CSS, not XAML."
     ],
     under: ["WPF", "XAML", "Borderless window with custom chrome", "Per-monitor DPI awareness"],
     related: ["t-webview2", "t-stack", "t-dialogs", "t-startup"]
@@ -102,7 +102,7 @@ window.TOPICS.push(
     audience: "technical",
     area: "Tech: How it's built",
     title: "WebView2",
-    summary: "WebView2 is Microsoft's embedded Edge browser control. MV64-2 uses it to run its HTML pages inside the desktop window.",
+    summary: "WebView2 is Microsoft's embedded Edge browser control. The Metadata Repository app uses it to run its HTML pages inside the desktop window.",
     keywords: ["webview", "webview2", "edge", "chromium", "browser control", "embedded browser", "virtual host"],
     synonyms: ["what is webview2", "how does the web ui run", "browser inside the app", "frontend host"],
     steps: [
@@ -132,7 +132,7 @@ window.TOPICS.push(
         "HTML: each area (Home, Data Elements, Dictionaries, Data Models, Establishments, Data Warehouse, Compare CSV and so on) is its own page. Moving between areas is a normal page navigation.",
         "CSS: each area has its own stylesheet, and components built in script carry inline styles in the same palette. See Theming and CSS.",
         "JavaScript: plain browser JavaScript with no React, Angular or bundler. A shared core script on every page provides menus, forms, dirty tracking, save handling and host messaging. Each page adds its own script, and the phone panel has one large script of its own.",
-        "JavaScript is not Java. Java is a separate language that MV64-2 does not use anywhere.",
+        "JavaScript is not Java. Java is a separate language that the Metadata Repository app does not use anywhere.",
         "State that must survive a page change (for example which collection is open) is kept in the browser's session storage; personal preferences go in local storage."
     ],
     who: "Technical audiences.",
@@ -148,7 +148,7 @@ window.TOPICS.push(
     audience: "technical",
     area: "Tech: How it's built",
     title: "JSON as the data format",
-    summary: "JSON is a simple text format for structured data. MV64-2 stores almost everything as JSON files and sends JSON between the pages and the host.",
+    summary: "JSON is a simple text format for structured data. The Metadata Repository app stores almost everything as JSON files and sends JSON between the pages and the host.",
     keywords: ["json", "data format", "file format", "schema", "record format", "serialisation", "serialization"],
     synonyms: ["what is json", "how is data stored", "what format", "text files"],
     steps: [
@@ -171,7 +171,7 @@ window.TOPICS.push(
     audience: "technical",
     area: "Tech: How it's built",
     title: "Libraries and packages used",
-    summary: "MV64-2 keeps third-party dependencies small: a handful of NuGet packages on the host and two web libraries on the pages.",
+    summary: "The Metadata Repository app keeps third-party dependencies small: a handful of NuGet packages on the host and two web libraries on the pages.",
     keywords: ["libraries", "packages", "nuget", "dependencies", "epplus", "velopack", "sqlclient", "codemirror", "highlight.js", "excel library"],
     synonyms: ["third party", "what packages", "excel export library", "open source", "dependency list"],
     steps: [
@@ -534,7 +534,7 @@ window.TOPICS.push(
         "Inside a collection: one JSON file per item, named by a number. Data element files hold every version.",
         "Each collection has a small hidden folder beside its items for its index (so lists load quickly without opening every file) and its ownership record.",
         "Deleted items go to a deleted area inside the same collection, so they keep their context and can be restored.",
-        "The SQL Server data the Data Warehouse shows is separate. MV64-2 only reads it."
+        "The SQL Server data the Data Warehouse shows is separate. The Metadata Repository app only reads it."
     ],
     who: "Technical audiences.",
     tips: [

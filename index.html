@@ -3,45 +3,25 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Metadata Repository Functionality · How does it work?</title>
+    <title>Metadata Repository · Ask how anything works</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <header class="top-bar">
-        <div class="logo">MV64-2 <span class="logo-sub">How does it work?</span></div>
+    <main class="page">
+        <header class="hero">
+            <h1>Metadata Repository</h1>
+            <p class="subtitle">Ask how anything works</p>
+        </header>
+
         <form id="ask-form" class="ask" role="search" autocomplete="off">
             <label for="ask-input" class="visually-hidden">Ask a question</label>
-            <input id="ask-input" type="search" placeholder="Ask how something works, e.g. “How do establishment filters work?”" spellcheck="false">
-            <button type="submit" class="btn-primary">Ask</button>
+            <input id="ask-input" type="search" placeholder="e.g. How does the toolbar work?" spellcheck="false" autofocus>
+            <button type="submit" class="ask-btn" aria-label="Ask">Ask</button>
         </form>
-        <div class="audience" role="group" aria-label="Who is this for?" title="Technical favours developer topics when ranking answers">
-            <button type="button" data-aud="everyone" aria-pressed="true">Everyone</button>
-            <button type="button" data-aud="technical" aria-pressed="false">Technical</button>
-        </div>
-    </header>
 
-    <div class="main">
-        <aside class="sidebar" aria-label="Topics">
-            <div class="sidebar-top">
-                <label for="topic-filter" class="visually-hidden">Filter topics</label>
-                <input id="topic-filter" type="search" placeholder="Filter topics…" spellcheck="false">
-                <div id="topic-count" class="muted small"></div>
-            </div>
-            <nav id="topic-list" class="topic-list"></nav>
-        </aside>
-
-        <main id="panel" class="panel" tabindex="-1" aria-live="polite">
-            <noscript><p class="muted">Turn on JavaScript to use this guide.</p></noscript>
-        </main>
-    </div>
-
-    <footer class="footer">
-        <span id="footer-version"></span>
-        <span class="sep">·</span>
-        <span id="footer-updated"></span>
-        <span class="sep">·</span>
-        <span class="muted">Explains behaviour for users and, under Technical, how it is built. Ask a Data Custodian or Admin if something looks different on your screen.</span>
-    </footer>
+        <div id="answer" class="answer" aria-live="polite"></div>
+        <noscript><p class="quiet">Turn on JavaScript to use this page.</p></noscript>
+    </main>
 
     <script src="data/topics.js"></script>
     <script src="data/topics-technical.js"></script>

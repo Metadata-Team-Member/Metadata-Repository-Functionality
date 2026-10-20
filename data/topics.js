@@ -4,22 +4,8 @@
    See README.md for the field list and how to add a topic. */
 
 window.GUIDE_META = {
-    version: "1.1.0",
-    mv64Version: "1.2.9",
-    updated: "20 Oct 2026",
-    suggestions: ["home-navigation", "est-filters", "de-versions", "dict-export", "roles", "ownership", "offline-mode", "metabot", "saving"],
-    exampleQuestions: [
-        "How do establishment filters work?",
-        "What is it built in?",
-        "How does the toolbar work?",
-        "How does Save New Version work?",
-        "How do I get edit access to a collection?",
-        "Why can't I edit this?",
-        "How do I export a dictionary?",
-        "How does the Data Warehouse query work?",
-        "What happens when I'm offline?",
-        "How does the digital signature work?"
-    ]
+    appRelease: "1.2.9",   // the app release this content describes (not shown on the page)
+    updated: "20 Oct 2026"
 };
 
 window.TOPIC_AREAS = [
@@ -46,7 +32,7 @@ window.TOPICS.push(
 {
     id: "home-navigation",
     area: "Getting started",
-    title: "Getting around MV64-2",
+    title: "Getting around the Metadata Repository",
     summary: "The Home screen's top menu takes you to every part of the metadata repository.",
     keywords: ["home", "menu", "navigation", "library", "metadata", "sources", "tools", "data", "back button", "home button"],
     synonyms: ["where is", "find a page", "open", "main menu", "start", "navigate", "getting started", "overview"],
@@ -70,11 +56,11 @@ window.TOPICS.push(
     id: "patch-notes",
     area: "Getting started",
     title: "Updates and patch notes",
-    summary: "MV64-2 updates itself when it starts, and the Patch Notes panel on Home tells you what changed.",
+    summary: "The Metadata Repository app updates itself when it starts, and the Patch Notes panel on Home tells you what changed.",
     keywords: ["patch notes", "update", "version", "release", "new features", "changelog"],
     synonyms: ["what's new", "whats new", "upgrade", "latest version", "auto update", "restart"],
     steps: [
-        "Each time MV64-2 starts, the splash screen checks for a newer version.",
+        "Each time the Metadata Repository app starts, the splash screen checks for a newer version.",
         "If there is one, it downloads it, installs it and restarts the app automatically. You don't need to do anything.",
         "On the Home screen, the Patch Notes panel in the corner shows the current version number.",
         "Click the panel header to expand it and read the notes for recent releases, then click again to collapse it."
@@ -82,7 +68,7 @@ window.TOPICS.push(
     who: "Everyone can read patch notes and receives updates. Only Admins publish the notes.",
     tips: [
         "If the app restarts by itself right after you open it, it has most likely just installed an update.",
-        "Close MV64-2 at the end of the day so you pick up the latest version next time."
+        "Close the Metadata Repository app at the end of the day so you pick up the latest version next time."
     ],
     related: ["home-navigation", "offline-mode"]
 },
@@ -90,12 +76,12 @@ window.TOPICS.push(
     id: "watch-subscriptions",
     area: "Getting started",
     title: "Watching items and the notifications bell",
-    summary: "Watch a data element, dictionary or data model and MV64-2 tells you when someone changes it.",
+    summary: "Watch a data element, dictionary or data model and the Metadata Repository app tells you when someone changes it.",
     keywords: ["watch", "subscribe", "subscription", "bell", "notification", "star", "changed", "alert"],
     synonyms: ["notify me", "follow", "keep track", "watched items", "unwatch", "mark as seen", "badge"],
     steps: [
         "Open the item you care about and click the Watch button in its title bar. It lights up when you are watching.",
-        "MV64-2 checks your watched items in the background about every 15 seconds.",
+        "The Metadata Repository app checks your watched items in the background about every 15 seconds.",
         "When a watched item changes, a badge appears on the Watch button and on the subscriptions button on Home.",
         "Open the subscriptions panel on Home to see what changed and when. Click an entry to jump straight to it.",
         "Click Clear to mark everything as seen. You keep watching the items; only the badge resets.",
@@ -163,7 +149,7 @@ window.TOPICS.push(
     keywords: ["mapping", "mapped", "code", "description", "lookup", "public private", "hsp", "meaning", "hint"],
     synonyms: ["what does this code mean", "code to description", "decode", "translate code", "mapped values"],
     steps: [
-        "MV64-2 keeps lists that pair each code with its description. These lists are built from the permitted values on the matching data elements.",
+        "The Metadata Repository app keeps lists that pair each code with its description. These lists are built from the permitted values on the matching data elements.",
         "Wherever a code has a known description, the card shows it as “code — description”.",
         "While you edit an establishment, a small hint under a coded field shows the description of the code you typed, so you can check it before saving.",
         "Exports keep the original code and add a second column with the description."
@@ -187,7 +173,7 @@ window.TOPICS.push(
         "Change the fields you need and click Save (or use File > Save). Cancel leaves without saving.",
         "Fields can be marked Required, Locked (the establishment code never changes) or Read-only. A read-only field names the folder it comes from when another team owns that data.",
         "To add an establishment, choose File > New. A draft card appears at the top and a new code is assigned automatically. Codes are never reused.",
-        "The establishment number is required. If the number is already used by another establishment, MV64-2 warns you and lets you save anyway if that is intended.",
+        "The establishment number is required. If the number is already used by another establishment, the Metadata Repository app warns you and lets you save anyway if that is intended.",
         "If someone else saved the same establishment while you were editing, you are asked to reload the latest values instead of overwriting their work.",
         "To delete, select the card and choose File > Delete. The record is moved to a deleted area rather than wiped, so it can be recovered."
     ],
@@ -238,7 +224,7 @@ window.TOPICS.push(
     who: "Everyone. Exporting only reads data; it never changes the repository.",
     tips: [
         "Large exports show progress in the status area at the top right. Only one export runs at a time.",
-        "See Export options for a summary of every export in MV64-2."
+        "See Export options for a summary of every export in the Metadata Repository app."
     ],
     related: ["est-filters", "export-overview", "est-mapped"]
 }
@@ -302,7 +288,7 @@ window.TOPICS.push(
         "The element is moved to its collection's deleted area. It is not permanently removed.",
         "To bring it back, choose File > Deleted Items. A list shows each deleted element and when it was deleted.",
         "Click Restore beside the one you want.",
-        "If a live element is already in the same place, MV64-2 offers “Rename & Restore” so both are kept."
+        "If a live element is already in the same place, the Metadata Repository app offers “Rename & Restore” so both are kept."
     ],
     who: "Anyone with edit access to the collection.",
     tips: [
@@ -363,12 +349,12 @@ window.TOPICS.push(
     id: "dm-related",
     area: "Data Models",
     title: "Related tables and key mismatches",
-    summary: "Related tables record how one table joins to another, and MV64-2 warns you when the join keys don't line up.",
+    summary: "Related tables record how one table joins to another, and the Metadata Repository app warns you when the join keys don't line up.",
     keywords: ["related table", "relationship", "join", "key mismatch", "foreign key", "link tables"],
     synonyms: ["relate tables", "connect tables", "joins", "relationships between tables", "mismatch warning"],
     steps: [
         "In a table's Form view, use Add Related Table and pick another table in the data model.",
-        "Choose the keys that join them. MV64-2 offers the other table's keys, or its columns if it has no keys yet.",
+        "Choose the keys that join them. The Metadata Repository app offers the other table's keys, or its columns if it has no keys yet.",
         "If a chosen key isn't a key or column on the other table, a “Key mismatch” warning shows which names don't match.",
         "Fix the warning by choosing a matching key, or by adding the key to the other table.",
         "Open a related table straight from the form; a Back link returns you to where you were."
@@ -412,7 +398,7 @@ window.TOPICS.push(
     steps: [
         "For a new data model: open Library > Data Models and click the create button in the title bar.",
         "For a new set of model elements: open Metadata > Data Model Elements and click its create button.",
-        "Give it a name. MV64-2 creates it and, if you are not an Admin, makes you its Data Custodian.",
+        "Give it a name. The Metadata Repository app creates it and, if you are not an Admin, makes you its Data Custodian.",
         "Data Model Elements work like Data Elements: open a collection, pick an element and edit it in the form."
     ],
     who: "Custodian role and above. The create buttons are hidden for other roles.",
@@ -480,7 +466,7 @@ window.TOPICS.push(
         "Open the dictionary, then File > Export.",
         "Data Dictionary: asks whether to include Derivation Logic. Choose Include or Exclude, then pick where to save. The result is a web page you can open in a browser, print or save as PDF.",
         "Dictionary Specs: exports the specifications of the elements currently in the dictionary as JSON or CSV.",
-        "If you are in edit mode, choose “Save & export” when asked. MV64-2 saves first and only exports once the save has worked."
+        "If you are in edit mode, choose “Save & export” when asked. The Metadata Repository app saves first and only exports once the save has worked."
     ],
     who: "Everyone.",
     tips: [
@@ -521,7 +507,7 @@ window.TOPICS.push(
     keywords: ["metadata lookup", "glossary", "definition", "hover", "tooltip", "term", "incorporation"],
     synonyms: ["what does this word mean", "underlined word", "popup definition", "terms", "lookup"],
     steps: [
-        "When a form opens, MV64-2 looks for glossary terms in its field labels and headings.",
+        "When a form opens, the Metadata Repository app looks for glossary terms in its field labels and headings.",
         "Matching terms are underlined.",
         "Hover over a term for a moment to see its definition.",
         "Click the term to open a detail window with its name, definition, incorporation and other details.",
@@ -600,7 +586,7 @@ window.TOPICS.push(
         "Click Compare. The summary shows counts, and the tabs show Only A, Only B and Matching rows.",
         "Export Only A, Only B, a Diff report or, in Key columns mode, Paired diffs."
     ],
-    who: "Everyone. Files are compared inside MV64-2 on your computer and aren't saved to the repository.",
+    who: "Everyone. Files are compared inside the Metadata Repository app on your computer and aren't saved to the repository.",
     tips: [
         "Columns are matched by header name, so the column order doesn't need to be the same.",
         "Spaces at the start and end of values are ignored. Each file is read up to its first 50,000 rows, and you are told if a file was capped.",
@@ -616,11 +602,11 @@ window.TOPICS.push(
     id: "roles",
     area: "Permissions / roles",
     title: "Roles: what each one can do",
-    summary: "Your role (User, Editor, Custodian or Admin) decides what you can change across MV64-2.",
+    summary: "Your role (User, Editor, Custodian or Admin) decides what you can change across the Metadata Repository app.",
     keywords: ["role", "roles", "permission", "permissions", "user", "editor", "custodian", "admin", "access"],
     synonyms: ["why can't i edit", "why cant i edit", "read only", "no access", "rights", "permission denied", "who can"],
     steps: [
-        "MV64-2 recognises you from your Windows login. There is nothing extra to sign in to.",
+        "The Metadata Repository app recognises you from your Windows login. There is nothing extra to sign in to.",
         "User: can view and export, but can't change anything.",
         "Editor: can edit where editing is open to Editors, for example establishments and unowned establishment folders, and can be added as an editor of a collection.",
         "Custodian: everything an Editor can do, plus creating data models and Data Model Element collections, and requesting ownership of collections.",
@@ -687,19 +673,19 @@ window.TOPICS.push(
     id: "offline-mode",
     area: "Offline mode",
     title: "Offline mode",
-    summary: "If MV64-2 can't reach the shared repository, it keeps running with limited features and shows an “Offline mode” badge.",
+    summary: "If the Metadata Repository app can't reach the shared repository, it keeps running with limited features and shows an “Offline mode” badge.",
     keywords: ["offline", "offline mode", "limited mode", "repository unavailable", "vpn", "network", "retry", "browse"],
     synonyms: ["can't connect", "cant connect", "no network", "working from home", "disconnected", "cannot save"],
     steps: [
-        "When MV64-2 starts and can't reach the repository, a window offers Retry, Browse, Continue with limited features, or Quit.",
+        "When the Metadata Repository app starts and can't reach the repository, a window offers Retry, Browse, Continue with limited features, or Quit.",
         "Retry tries again (for example after connecting to VPN). Browse lets you choose the repository folder yourself.",
         "Continue with limited features opens the app without the shared content. Nothing can be saved, and an orange “Offline mode” pill shows in the title bar.",
-        "If the connection drops while you are working, MV64-2 shows the same pill, stops saving, and keeps checking quietly. When the connection comes back, the pill goes away and you can carry on.",
+        "If the connection drops while you are working, the Metadata Repository app shows the same pill, stops saving, and keeps checking quietly. When the connection comes back, the pill goes away and you can carry on.",
         "Any save attempted while offline is refused with a message, and your changes stay on screen as unsaved."
     ],
     who: "Everyone. Editing is off for every role while offline.",
     tips: [
-        "If you chose Continue with limited features, restart MV64-2 once you are connected to get everything back.",
+        "If you chose Continue with limited features, restart the Metadata Repository app once you are connected to get everything back.",
         "Some phone apps show cached information while offline, for example your Profile."
     ],
     related: ["saving", "roles", "phone-basics"]
@@ -840,7 +826,7 @@ window.TOPICS.push(
     id: "direct-messages",
     area: "Phone apps",
     title: "Direct messages and Contacts",
-    summary: "The DM app lets you send short messages and images to colleagues who use MV64-2.",
+    summary: "The DM app lets you send short messages and images to colleagues who use the Metadata Repository app.",
     keywords: ["dm", "direct message", "message", "chat", "contacts", "send image"],
     synonyms: ["talk to a colleague", "messaging", "instant message", "send a message", "people"],
     steps: [
@@ -952,12 +938,12 @@ window.TOPICS.push(
     id: "saving",
     area: "Saving / unsaved changes / Ctrl+S",
     title: "Saving and Ctrl+S",
-    summary: "Ctrl+S saves the page you're on, and MV64-2 only says “Saved” once your change has really been stored.",
+    summary: "Ctrl+S saves the page you're on, and the Metadata Repository app only says “Saved” once your change has really been stored.",
     keywords: ["save", "saving", "ctrl+s", "ctrl s", "saved", "not saved", "keyboard shortcut"],
     synonyms: ["how do i save", "save shortcut", "did it save", "save failed", "control s"],
     steps: [
         "Press Ctrl+S, or use File > Save, on editing pages such as Data Elements, Data Models, Dictionaries and Establishment List folders.",
-        "Before saving, MV64-2 finishes the field you are typing in so nothing is missed.",
+        "Before saving, the Metadata Repository app finishes the field you are typing in so nothing is missed.",
         "The status area shows that it is saving, then Saved once the change is safely stored.",
         "If the save is refused (for example you lost edit access, someone else changed it, or you are offline), you see why and your changes stay on screen as unsaved so you can try again.",
         "If you are read-only, Ctrl+S just reminds you that saving is turned off for your role."
@@ -973,7 +959,7 @@ window.TOPICS.push(
     id: "unsaved-changes",
     area: "Saving / unsaved changes / Ctrl+S",
     title: "Unsaved changes warnings",
-    summary: "MV64-2 tracks changes you haven't saved yet and asks before you leave, so you don't lose work.",
+    summary: "The Metadata Repository app tracks changes you haven't saved yet and asks before you leave, so you don't lose work.",
     keywords: ["unsaved changes", "unsaved", "discard", "leave page", "lose changes", "warning"],
     synonyms: ["lost my work", "are you sure", "dirty", "pop up when leaving", "changes not saved"],
     steps: [
@@ -997,7 +983,7 @@ window.TOPICS.push(
     id: "export-overview",
     area: "Export options",
     title: "All export options at a glance",
-    summary: "A quick list of everything you can export from MV64-2 and where to find it.",
+    summary: "A quick list of everything you can export from the Metadata Repository app and where to find it.",
     keywords: ["export", "exports", "download", "csv", "json", "pdf", "png", "print", "copy"],
     synonyms: ["get data out", "save a copy", "report", "extract", "spreadsheet", "export options"],
     steps: [

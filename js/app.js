@@ -1,33 +1,19 @@
-/* Metadata Repository Functionality: question matching and rendering.
-   Content comes from data/topics.js (user topics, window.TOPIC_AREAS, window.GUIDE_META)
-   and data/topics-technical.js (technical topics, window.TECH_AREAS).
-   No network requests: works from a shared folder or file://. */
+/* Metadata Repository Functionality: minimalist question-and-answer page.
+   Content comes from data/topics.js and data/topics-technical.js (window.TOPICS).
+   Ask a question and the single best-matching topic is shown. No network requests,
+   so it works from GitHub Pages, a shared folder or file://. */
 (function () {
     'use strict';
 
     var TOPICS = Array.isArray(window.TOPICS) ? window.TOPICS : [];
-    var AREAS = Array.isArray(window.TOPIC_AREAS) ? window.TOPIC_AREAS : [];
-    var META = window.GUIDE_META || {};
     var byId = {};
     TOPICS.forEach(function (t) { byId[t.id] = t; });
 
     var $ = function (id) { return document.getElementById(id); };
-    var panel = $('panel');
-    var listEl = $('topic-list');
-    var filterEl = $('topic-filter');
+    var answerEl = $('answer');
     var askForm = $('ask-form');
     var askInput = $('ask-input');
-    var activeId = null;
-
-    // Audience: 'everyone' (default, all topics ranked equally) or 'technical' (technical topics favoured).
-    var TECH_AREAS = Array.isArray(window.TECH_AREAS) ? window.TECH_AREAS : [];
-    var AUD_KEY = 'mrf-guide-audience';
-    var TECH_BOOST = 1.4;
-    var audience = 'everyone';
-    try { if (localStorage.getItem(AUD_KEY) === 'technical') audience = 'technical'; } catch (e) { /* storage blocked */ }
-    var audMatch = /[?&]aud=(everyone|technical)/.exec((typeof location !== 'undefined' && location.search) || '');
-    if (audMatch) audience = audMatch[1];
-    function isTech(t) { return t && t.audience === 'technical'; }
+    var MIN_SCORE = 3;
 
     // ------------------------------------------------------------------ text helpers
     function esc(s) {
@@ -41,7 +27,7 @@
      'do does did doing done how what why when where which who whom whose can could should would will shall may might must ' +
      'i me my mine we us our you your it its this that these those there here then than so if as about ' +
      'work works working worked use using used get got make made tell explain please help want need know ' +
-     'mv64 app thing things something way anything any some happen happens im ive id ill youre lets also just really').split(/\s+/)
+     'app thing things something way anything any some happen happens im ive id ill youre lets also just really').split(/\s+/)
         .forEach(function (w) { if (w) STOP[w] = true; });
 
     function stem(w) {
@@ -152,65 +138,12 @@
         var qToks = unique(tokens(query));
         if (!qToks.length) qToks = unique(tokens(query, true));
         return INDEX.map(function (e) {
-            var sc = scoreEntry(e, qToks, qNorm);
-            if (audience === 'technical' && isTech(e.t)) sc *= TECH_BOOST;
-            return { t: e.t, score: sc };
+            return { t: e.t, score: scoreEntry(e, qToks, qNorm) };
         }).filter(function (r) { return r.score > 0; })
           .sort(function (a, b) { return b.score - a.score; });
     }
 
-    // ------------------------------------------------------------------ sidebar
-    function renderList(filter) {
-        var shown;
-        if (filter && filter.trim()) {
-            var f = norm(filter);
-            var ranked = rank(filter).filter(function (r) { return r.score >= 2; });
-            var ids = {};
-            ranked.forEach(function (r) { ids[r.t.id] = true; });
-            TOPICS.forEach(function (t) { if (norm(t.title).indexOf(f) >= 0) ids[t.id] = true; });
-            shown = TOPICS.filter(function (t) { return ids[t.id]; });
-        } else {
-            shown = TOPICS.slice();
-        }
-
-        var html = '';
-        var areas = AREAS.slice();
-        TOPICS.forEach(function (t) { if (areas.indexOf(t.area) < 0) areas.push(t.area); });
-        var userAreas = areas.filter(function (a) { return TECH_AREAS.indexOf(a) < 0; });
-        var techAreas = areas.filter(function (a) { return TECH_AREAS.indexOf(a) >= 0; });
-        var groups = audience === 'technical'
-            ? [{ label: 'Technical', areas: techAreas }, { label: 'Using MV64-2', areas: userAreas }]
-            : [{ label: 'Using MV64-2', areas: userAreas }, { label: 'Technical', areas: techAreas }];
-        groups.forEach(function (g) {
-            var any = shown.some(function (t) { return g.areas.indexOf(t.area) >= 0; });
-            if (!any) return;
-            if (techAreas.length) html += '<div class="group-divider">' + esc(g.label) + '</div>';
-            g.areas.forEach(function (area) {
-                var items = shown.filter(function (t) { return t.area === area; });
-                if (!items.length) return;
-                html += '<div class="area-heading">' + esc(area.replace(/^Tech:\s*/, '')) + '</div>';
-                items.forEach(function (t) {
-                    html += '<button type="button" class="topic-link' + (t.id === activeId ? ' active' : '') +
-                        '" data-id="' + esc(t.id) + '">' + esc(t.title) + '</button>';
-                });
-            });
-        });
-        listEl.innerHTML = html || '<div class="empty-list">No topics match. Try a shorter word, or ask a question above.</div>';
-        $('topic-count').textContent = shown.length === TOPICS.length
-            ? TOPICS.length + ' topics'
-            : shown.length + ' of ' + TOPICS.length + ' topics';
-    }
-
-    function markActive() {
-        var links = listEl.querySelectorAll('.topic-link');
-        for (var i = 0; i < links.length; i++) {
-            var on = links[i].getAttribute('data-id') === activeId;
-            links[i].classList.toggle('active', on);
-            if (on && links[i].scrollIntoView) links[i].scrollIntoView({ block: 'nearest' });
-        }
-    }
-
-    // ------------------------------------------------------------------ explanation panel
+    // ------------------------------------------------------------------ answer card
     function list(items, cls, tag) {
         if (!items || !items.length) return '';
         return '<' + tag + ' class="' + cls + '">' + items.map(function (s) {
@@ -218,147 +151,85 @@
         }).join('') + '</' + tag + '>';
     }
 
-    function chips(ids) {
-        var html = (ids || []).map(function (id) {
-            var t = byId[id];
-            return t ? '<button type="button" class="chip" data-id="' + esc(t.id) + '">' + esc(t.title) + '</button>' : '';
-        }).join('');
-        return html ? '<div class="chips">' + html + '</div>' : '';
+    function areaLabel(t) {
+        return t.audience === 'technical'
+            ? 'Technical · ' + String(t.area || '').replace(/^Tech:\s*/, '')
+            : (t.area || '');
     }
 
-    function topicHtml(t) {
-        var related = (t.related || []).filter(function (id) { return byId[id]; });
-        return '<div class="area-chip' + (isTech(t) ? ' tech' : '') + '">' + esc(t.area) + '</div>' +
-            '<h1 class="topic-title">' + esc(t.title) + '</h1>' +
-            '<p class="topic-summary">' + esc(t.summary) + '</p>' +
-            '<section class="card"><h3>How it works</h3>' + list(t.steps, 'steps', 'ol') + '</section>' +
-            '<section class="card"><h3>Who can use it</h3><div class="who"><span class="role-pill">Role</span><div>' + esc(t.who) + '</div></div></section>' +
-            (t.under && t.under.length ? '<section class="card"><h3>Under the hood</h3>' + list(t.under, 'under', 'ul') + '</section>' : '') +
-            (t.tips && t.tips.length ? '<section class="card"><h3>Tips</h3>' + list(t.tips, 'tips', 'ul') + '</section>' : '') +
-            (related.length ? '<section class="card"><h3>Related</h3>' + chips(related) + '</section>' : '');
+    function section(title, body) {
+        return body ? '<section class="part"><h3>' + esc(title) + '</h3>' + body + '</section>' : '';
     }
 
-    function showTopic(id, opts) {
+    function showTopic(id) {
         var t = byId[id];
-        if (!t) return;
-        opts = opts || {};
-        activeId = id;
-        var html = '<div class="panel-inner">';
-        if (opts.question) {
-            html += '<div class="answer-for">Best answer for <strong>“' + esc(opts.question) + '”</strong></div>';
-        }
-        html += topicHtml(t);
-        if (opts.alsoIds && opts.alsoIds.length) {
-            html += '<div class="related-box"><h3>Related topics</h3>' + chips(opts.alsoIds) + '</div>';
-        }
-        html += '</div>';
-        panel.innerHTML = html;
-        panel.scrollTop = 0;
-        markActive();
-        if (!opts.noHash) {
-            try { history.replaceState(null, '', '#' + id); } catch (e) { /* file:// in some browsers */ }
-        }
+        if (!t) return false;
+        answerEl.innerHTML =
+            '<article class="card">' +
+                '<div class="area">' + esc(areaLabel(t)) + '</div>' +
+                '<h2 class="title">' + esc(t.title) + '</h2>' +
+                '<p class="summary">' + esc(t.summary) + '</p>' +
+                section('How it works', list(t.steps, 'steps', 'ol')) +
+                section('Who can use it', t.who ? '<p>' + esc(t.who) + '</p>' : '') +
+                section('Tips', list(t.tips, 'tips', 'ul')) +
+                section('Under the hood', t.audience === 'technical' ? list(t.under, 'under', 'ul') : '') +
+            '</article>';
+        document.body.classList.add('has-answer');
+        return true;
     }
 
-    function showNoMatch(question) {
-        activeId = null;
-        markActive();
-        var starters = (META.suggestions || []).filter(function (id) { return byId[id]; });
-        if (!starters.length) starters = TOPICS.slice(0, 8).map(function (t) { return t.id; });
-        var examples = (META.exampleQuestions || []).map(function (q) {
-            return '<button type="button" class="chip" data-ask="' + esc(q) + '">' + esc(q) + '</button>';
-        }).join('');
-        panel.innerHTML = '<div class="panel-inner no-match">' +
-            '<h2>I couldn’t find a clear match for “' + esc(question) + '”</h2>' +
-            '<p>Try naming the screen or feature, for example “filters”, “export”, “ownership” or “Metabot”. ' +
-            'You can also pick a topic from the list on the left, or start with one of these:</p>' +
-            '<section class="card"><h3>Popular topics</h3>' + chips(starters) + '</section>' +
-            (examples ? '<section class="card"><h3>Questions you can ask</h3><div class="chips">' + examples + '</div></section>' : '') +
-            '</div>';
-        panel.scrollTop = 0;
+    function showMessage(text) {
+        answerEl.innerHTML = '<p class="quiet">' + esc(text) + '</p>';
+        document.body.classList.add('has-answer');
     }
 
-    function ask(question) {
+    function clearAnswer() {
+        answerEl.innerHTML = '';
+        document.body.classList.remove('has-answer');
+    }
+
+    function setUrl(q, id) {
+        try {
+            var url = location.pathname + (q ? '?q=' + encodeURIComponent(q) : '') + (id ? '#' + id : '');
+            history.replaceState(null, '', url);
+        } catch (e) { /* some browsers block this on file:// */ }
+    }
+
+    // Matches across all topics (user and technical) and shows only the single best one.
+    function ask(question, opts) {
         question = String(question || '').trim();
-        if (!question) return;
+        opts = opts || {};
+        if (!question) { clearAnswer(); if (!opts.noUrl) setUrl('', ''); return null; }
         var ranked = rank(question);
-        if (!ranked.length || ranked[0].score < 3) { showNoMatch(question); return; }
-        var best = ranked[0];
-        var also = ranked.slice(1).filter(function (r) { return r.score >= best.score * 0.4; })
-            .slice(0, 3).map(function (r) { return r.t.id; });
-        (best.t.related || []).forEach(function (id) {
-            if (also.length < 3 && id !== best.t.id && also.indexOf(id) < 0 && byId[id]) also.push(id);
-        });
-        showTopic(best.t.id, { question: question, alsoIds: also });
+        var best = ranked.length && ranked[0].score >= MIN_SCORE ? ranked[0].t : null;
+        if (best) showTopic(best.id);
+        else showMessage('No match \u2014 try rephrasing.');
+        if (!opts.noUrl) setUrl(question, best ? best.id : '');
+        return best ? best.id : null;
     }
 
     // ------------------------------------------------------------------ events
-    document.addEventListener('click', function (e) {
-        var el = e.target.closest ? e.target.closest('[data-id],[data-ask]') : null;
-        if (!el) return;
-        if (el.hasAttribute('data-ask')) {
-            askInput.value = el.getAttribute('data-ask');
-            ask(askInput.value);
-            return;
-        }
-        showTopic(el.getAttribute('data-id'));
-    });
-
     askForm.addEventListener('submit', function (e) {
         e.preventDefault();
         ask(askInput.value);
     });
 
-    // Audience toggle (subtle, in the header).
-    var audBtns = document.querySelectorAll ? document.querySelectorAll('[data-aud]') : [];
-    function syncAudience() {
-        for (var i = 0; i < audBtns.length; i++) {
-            var on = audBtns[i].getAttribute('data-aud') === audience;
-            audBtns[i].classList.toggle('on', on);
-            audBtns[i].setAttribute('aria-pressed', on ? 'true' : 'false');
-        }
-    }
-    function setAudience(a) {
-        audience = a === 'technical' ? 'technical' : 'everyone';
-        try { localStorage.setItem(AUD_KEY, audience); } catch (e) { /* storage blocked */ }
-        syncAudience();
-        renderList(filterEl.value);
-        markActive();
-    }
-    for (var ai = 0; ai < audBtns.length; ai++) {
-        audBtns[ai].addEventListener('click', function (e) { setAudience(e.currentTarget.getAttribute('data-aud')); });
-    }
-    syncAudience();
-
-    filterEl.addEventListener('input', function () { renderList(filterEl.value); });
-
     document.addEventListener('keydown', function (e) {
-        if (e.key === '/' && document.activeElement !== askInput && document.activeElement !== filterEl) {
+        if (e.key === '/' && document.activeElement !== askInput) {
             e.preventDefault();
             askInput.focus();
+            askInput.select();
         }
     });
 
-    // Small hook for testing in the browser console: __guide.rank('your question').
-    window.__guide = { rank: rank, ask: ask, show: showTopic, audience: function (a) { if (a) setAudience(a); return audience; } };
+    // Console hook for checking matches: __guide.rank('your question').
+    window.__guide = { rank: rank, ask: ask, show: showTopic };
 
-    // ------------------------------------------------------------------ start
-    $('footer-version').textContent = 'Guide v' + (META.version || '1.0.0');
-    $('footer-updated').textContent = 'Last updated for MV64-2 ' + (META.mv64Version || '') +
-        (META.updated ? ' (' + META.updated + ')' : '');
-
-    renderList('');
-    if (!TOPICS.length) {
-        panel.innerHTML = '<div class="panel-inner"><p class="muted">No topics loaded. Check that the data folder sits next to this page.</p></div>';
-        return;
-    }
-    var start = decodeURIComponent((location.hash || '').replace(/^#/, ''));
+    // ------------------------------------------------------------------ start: empty until asked
+    var hashId = decodeURIComponent((location.hash || '').replace(/^#/, ''));
     var qMatch = /[?&]q=([^&#]*)/.exec(location.search || '');
     var q0 = qMatch ? decodeURIComponent(qMatch[1].replace(/\+/g, ' ')) : '';
-    if (q0 && !byId[start]) {
-        askInput.value = q0;
-        ask(q0);
-    } else {
-        showTopic(byId[start] ? start : TOPICS[0].id, { noHash: !byId[start] });
-    }
+    if (q0) askInput.value = q0;
+    if (byId[hashId]) showTopic(hashId);
+    else if (q0) ask(q0, { noUrl: true });
 })();
