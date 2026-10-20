@@ -12,7 +12,8 @@ window.TECH_AREAS = [
     "Tech: Data & storage",
     "Tech: Security & roles",
     "Tech: Releases",
-    "Tech: Feature internals"
+    "Tech: Feature internals",
+    "Tech: Design & quality"
 ];
 window.TOPIC_AREAS = (window.TOPIC_AREAS || []).concat(window.TECH_AREAS);
 window.TOPICS = window.TOPICS || [];
@@ -579,7 +580,7 @@ window.TOPICS.push(
         "Shared lists such as direct messages, feedback and the roles file are read, changed and written whole, so the same last-save-wins rule applies.",
         "Establishment edits are safer. When a form opens, the host records a stamp for each file behind it. On save, if any file changed in the meantime, the save is refused and you are offered Reload values.",
         "Establishment and ownership writes go to a temporary file first and then swap it into place, so a dropped connection can't leave a half-written file. Multi-file changes are all-or-nothing with rollback.",
-        "Structural changes (editing a folder's structure, aligning ownership groups) take a backup first."
+        "Structural changes (such as editing a folder's structure) take a backup first."
     ],
     who: "Technical audiences.",
     tips: [
@@ -819,5 +820,126 @@ window.TOPICS.push(
     ],
     under: ["Session cache", "Regex term matching", "DOM text-node walking", "Tooltips"],
     related: ["lookup", "t-storage"]
+}
+);
+
+/* ============================== Design & quality ============================== */
+window.TOPICS.push(
+{
+    id: "t-why-wpf-html",
+    audience: "technical",
+    area: "Tech: Design & quality",
+    title: "Why WPF plus HTML instead of a web app",
+    question: "Why WPF plus HTML instead of a web app?",
+    summary: "A desktop host with a web UI gives Windows sign-in, direct access to the shared folder and native dialogs without running a server, while keeping a modern HTML interface.",
+    keywords: ["why wpf", "why not a web app", "desktop vs web", "design decision", "trade-offs", "hybrid", "rationale"],
+    synonyms: ["why wpf plus html", "why not a website", "why a desktop app", "why webview2", "why not blazor", "why not react"],
+    steps: [
+        "What the desktop host gives: identity from the Windows sign-in with no separate login; direct reads and writes to the shared repository folder; native Save and Open dialogs; a self-updating installer; and it keeps working with limited features when the network drops.",
+        "What the web UI gives: HTML, CSS and JavaScript are quick to build and change, flexible for rich layouts like dictionaries, cards and diagrams, and can reuse web libraries such as a code editor and SQL highlighting. WebView2 is Chromium, so modern web features work.",
+        "What it avoids: a web app would need a hosted server, a database or file service behind it, web sign-in and deployment pipelines. This design has no central application server to run.",
+        "Trade-offs: Windows only; every PC needs access to the shared folder; and with no central server there's no locking, so most records are last save wins.",
+        "The two halves talk through JSON messages, so the UI could in principle be moved behind a server later without rewriting it from scratch."
+    ],
+    who: "Technical audiences.",
+    tips: [
+        "Most day-to-day feature work is in the web UI; the host handles files, permissions and Windows integration."
+    ],
+    under: [
+        "WPF host",
+        "WebView2 web UI",
+        "Windows identity",
+        "No application server",
+        "JSON messaging"
+    ],
+    related: ["t-architecture", "t-stack", "t-scale", "t-bridge"]
+},
+{
+    id: "t-scale",
+    audience: "technical",
+    area: "Tech: Design & quality",
+    title: "How it would scale",
+    question: "How would it scale?",
+    summary: "Today each PC works directly against a shared folder, which suits a team-sized group. Larger scale would mainly pressure concurrency and network reads rather than the UI.",
+    keywords: ["scale", "scaling", "scalability", "performance", "more users", "growth", "limits", "capacity"],
+    synonyms: ["how would it scale", "how many users", "can it handle more", "bottlenecks", "what are the limits"],
+    steps: [
+        "How it works now: every PC runs its own copy and reads and writes JSON files on the shared repository. There's no central server to scale.",
+        "What keeps it fast: each collection keeps a small index so lists load without opening every file; establishment filter values are precomputed; establishment cards load in chunks as you scroll.",
+        "What grows with more users: more chance of two people saving the same item (last save wins for most records); more network reads, which a slow VPN feels first; and each running copy checks for watched-item changes about every 15 seconds.",
+        "What grows with more data: very large collections mean bigger indexes and more files per folder, and exports take longer (the establishment export already runs in the background with progress).",
+        "Typical next steps if it needed to scale further, as considerations rather than plans: per-record conflict checks like establishments already have, more precomputed indexes, or moving storage behind a central service or database so locking and search happen in one place."
+    ],
+    who: "Technical audiences.",
+    tips: [
+        "The JSON message boundary between UI and host is what would make a move to a central service practical."
+    ],
+    under: [
+        "File-based storage",
+        "Per-collection indexes",
+        "Precomputed facets",
+        "Polling",
+        "Last-writer-wins"
+    ],
+    related: ["t-storage", "t-concurrency", "t-why-wpf-html", "t-timer"]
+},
+{
+    id: "t-testing",
+    audience: "technical",
+    area: "Tech: Design & quality",
+    title: "How it's tested and released",
+    question: "How is it tested and released?",
+    summary: "Changes are built and tested by hand on feature branches, reviewed in GitHub pull requests, then packaged as a numbered release that every PC installs at startup.",
+    keywords: ["testing", "tested", "qa", "quality", "test", "release process", "pull request", "review"],
+    synonyms: ["how is it tested", "how is it tested and released", "is there automated testing", "unit tests", "quality assurance"],
+    steps: [
+        "Each feature or fix is built on its own branch and run locally from Visual Studio.",
+        "Testing is manual: the change is exercised in the running app, including role and offline cases. Some features include built-in ways to simulate conditions that are hard to reproduce, such as an intercepted network connection.",
+        "There isn't an automated test suite or build pipeline in the repository at 1.2.9.",
+        "The change goes up as a pull request on GitHub, is reviewed, and is merged into the main branch.",
+        "A release sets the version number, is packaged with Velopack and published to a shared release location. Each PC checks for it at startup, installs it and restarts.",
+        "User-facing changes are written up as patch notes and shown on Home."
+    ],
+    who: "Technical audiences.",
+    tips: [
+        "Adding automated tests around the host's permission checks and file writes would give the most safety for the least effort."
+    ],
+    under: [
+        "Feature branches",
+        "Manual testing",
+        "GitHub pull requests",
+        "Velopack releases",
+        "Patch notes"
+    ],
+    related: ["t-releases", "t-tools", "patch-notes"]
+},
+{
+    id: "t-security",
+    audience: "technical",
+    area: "Tech: Design & quality",
+    title: "How secure it is (high level)",
+    question: "How secure is it?",
+    summary: "It relies on Windows sign-in and the shared folder's own permissions, and adds role and ownership checks on every write, read-only database access and careful handling of AI requests.",
+    keywords: ["security", "secure", "safe", "risk", "protection", "privacy", "audit"],
+    synonyms: ["how secure is it", "is it safe", "security model", "can people see my data", "is data protected"],
+    steps: [
+        "Identity: the app uses your Windows sign-in, so it stores no passwords of its own.",
+        "Foundation: the repository is a shared network folder, so its network permissions and backups are the base layer of protection.",
+        "Writes: every save, delete and ownership change is re-checked by the desktop host at that moment against the roles list and the collection's ownership. If anything can't be read, the change is refused rather than guessed.",
+        "Audit: ownership changes are recorded, and refused write attempts are logged.",
+        "Database: the Data Warehouse uses your own Windows credentials and only allows a single read-only query, with row limits and a timeout.",
+        "AI: Metabot uses a key you provide, sends only a cleaned summary of the page (no data rows or query results), and never runs SQL itself.",
+        "The web UI runs from local files inside a private browser profile, separate from your normal browser."
+    ],
+    who: "Technical audiences.",
+    tips: ["The UI hiding a button is only convenience; the host's checks are the real gate."],
+    under: [
+        "Windows identity",
+        "Fail-closed authorisation",
+        "Audit logging",
+        "Read-only SQL",
+        "Context sanitising"
+    ],
+    related: ["t-auth-roles", "t-warehouse-internals", "t-metabot-internals", "t-storage"]
 }
 );

@@ -9,6 +9,8 @@ window.GUIDE_META = {
 };
 
 window.TOPIC_AREAS = [
+    "Concepts",
+    "Everyday tasks",
     "Getting started",
     "Establishments",
     "Data Elements",
@@ -22,7 +24,9 @@ window.TOPIC_AREAS = [
     "Phone apps",
     "Mail and Feedback",
     "Saving / unsaved changes / Ctrl+S",
-    "Export options"
+    "Export options",
+    "Troubleshooting",
+    "What's new"
 ];
 
 window.TOPICS = [];
@@ -60,7 +64,7 @@ window.TOPICS.push(
     question: "How do updates and patch notes work?",
     summary: "The Metadata Repository app updates itself when it starts, and the Patch Notes panel on Home tells you what changed.",
     keywords: ["patch notes", "update", "version", "release", "new features", "changelog"],
-    synonyms: ["what's new", "whats new", "upgrade", "latest version", "auto update", "restart"],
+    synonyms: ["patch notes", "upgrade", "auto update", "restart", "update the app"],
     steps: [
         "Each time the Metadata Repository app starts, the splash screen checks for a newer version.",
         "If there is one, it downloads it, installs it and restarts the app automatically. You don't need to do anything.",
@@ -272,7 +276,7 @@ window.TOPICS.push(
     question: "What is the difference between Save and Save New Version?",
     summary: "Save corrects the current version; Save New Version keeps history by starting a new version from today.",
     keywords: ["version", "versions", "save new version", "history", "from date", "to date", "effective date"],
-    synonyms: ["new version", "versioning", "keep history", "date range", "previous version", "superseded"],
+    synonyms: ["new version", "versioning", "keep history", "date range", "previous version", "superseded", "what does save new version do", "save new version"],
     steps: [
         "Every data element keeps a list of versions, newest first. Each version has a From date and a To date.",
         "File > Save writes your changes into the current version. Use it for corrections, such as a typo.",
@@ -630,7 +634,7 @@ window.TOPICS.push(
     question: "What can each role do?",
     summary: "Your role (User, Editor, Custodian or Admin) decides what you can change across the Metadata Repository app.",
     keywords: ["role", "roles", "permission", "permissions", "user", "editor", "custodian", "admin", "access"],
-    synonyms: ["why can't i edit", "why cant i edit", "read only", "no access", "rights", "permission denied", "who can"],
+    synonyms: ["read only role", "no access", "rights", "permission denied", "who can", "role levels"],
     steps: [
         "The Metadata Repository app recognises you from your Windows login. There is nothing extra to sign in to.",
         "User: can view and export, but can't change anything.",
@@ -655,7 +659,7 @@ window.TOPICS.push(
     question: "How does collection ownership work?",
     summary: "Each collection can have a Data Custodian, Co-custodians, Editors and a Data Steward, and only they (and Admins) can change it.",
     keywords: ["ownership", "custodian", "data custodian", "co-custodian", "steward", "data steward", "owner", "owned", "unowned"],
-    synonyms: ["who owns", "who looks after", "edit access", "add editor", "read-only banner", "get access", "what is a custodian", "what is a steward", "what is a co-custodian"],
+    synonyms: ["who owns", "who looks after", "edit access", "add editor", "read-only banner", "get access", "who owns this collection", "who owns this", "who is the custodian"],
     steps: [
         "Open a collection (for example in Data Elements, Data Models, a dictionary or an Establishment List folder) and click Ownership in the title bar.",
         "The panel shows the Data Steward, the Data Custodian, any Co-custodians and Editors, and what you can do.",
@@ -704,7 +708,7 @@ window.TOPICS.push(
     question: "What happens in offline mode?",
     summary: "If the Metadata Repository app can't reach the shared repository, it keeps running with limited features and shows an “Offline mode” badge.",
     keywords: ["offline", "offline mode", "limited mode", "repository unavailable", "vpn", "network", "retry", "browse"],
-    synonyms: ["can't connect", "cant connect", "no network", "working from home", "disconnected", "cannot save"],
+    synonyms: ["can't connect", "cant connect", "no network", "working from home", "disconnected", "cannot save", "why am i seeing offline", "offline pill", "offline badge", "why does it say offline"],
     steps: [
         "When the Metadata Repository app starts and can't reach the repository, a window offers Retry, Browse, Continue with limited features, or Quit.",
         "Retry tries again (for example after connecting to VPN). Browse lets you choose the repository folder yourself.",
@@ -1043,5 +1047,254 @@ window.TOPICS.push(
         "For establishments, filter first: exports use the establishments currently listed."
     ],
     related: ["de-export", "dict-export", "est-export", "dw-query", "csv-compare"]
+}
+);
+
+/* ============================== Concepts ============================== */
+window.TOPICS.push(
+{
+    id: "c-metadata",
+    area: "Concepts",
+    title: "What metadata is",
+    question: "What is Metadata?",
+    summary: "Metadata is data about data: the information that explains what a piece of data means, how it is recorded and who is responsible for it.",
+    keywords: ["metadata", "meta data", "data about data", "definition", "data quality", "data standards", "health data"],
+    synonyms: ["what is metadata", "what does metadata mean", "define metadata", "why does metadata matter", "what is a data standard"],
+    steps: [
+        "Data on its own is just values, such as “3” or “2024-05-01”. Metadata tells you what those values mean: which field they belong to, what the field is for, and how it should be filled in.",
+        "Typical metadata for one field (a data element): its name and definition, data type and format (for example a date as DD/MM/YYYY), size, whether it is mandatory, its permitted values (code and description pairs such as 1 = Public, 2 = Private), how it is derived, and its version dates.",
+        "It also says who is responsible: each collection has a Data Custodian who looks after it and approves changes, and may have a Data Steward.",
+        "Why it matters for health data: the same word can mean different things in different systems. Agreed definitions and permitted values mean counts, reports and data linkage compare like with like.",
+        "It underpins data quality. When everyone records a field the same way, errors are easier to spot, and analysts know exactly what they are looking at.",
+        "How the Metadata Repository manages it: data elements hold definitions, formats and permitted values, with dated versions. Collections group them and carry ownership. Dictionaries publish them as readable documents. Data models describe tables and how they relate. Metadata Lookup gives hover definitions for common terms. Establishment codes are shown with their descriptions using mapping files."
+    ],
+    who: "Everyone.",
+    tips: [
+        "If you're unsure what a field means, open its data element. The definition, guide for use and permitted values are the authoritative answer.",
+        "Ask “What's the difference between a data element, a collection and a dictionary?” for how the pieces fit together."
+    ],
+    related: ["c-element-collection-dictionary", "de-open", "c-custodian", "dict-overview"]
+},
+{
+    id: "c-element-collection-dictionary",
+    area: "Concepts",
+    title: "Data elements, collections and dictionaries",
+    question: "What's the difference between a data element, a collection and a dictionary?",
+    summary: "A data element describes one field, a collection groups related data elements and carries ownership, and a dictionary publishes a collection as a readable document.",
+    keywords: ["difference", "data element", "collection", "dictionary", "compare", "relationship"],
+    synonyms: ["data element vs collection", "collection vs dictionary", "how do they fit together", "element collection dictionary"],
+    steps: [
+        "Data element: the description of one field, such as “Admission date”: its definition, type, format, permitted values and versions. You edit these in Metadata > Data Elements.",
+        "Collection: a named group of related data elements, usually one data set or one set of reference data. Ownership is set per collection, so the Data Custodian, Co-custodians and Editors of a collection decide who can change its elements.",
+        "Dictionary: a document-style view built from a collection's data elements, with a cover page, preamble, abbreviations and a page per element. Open them from Library > Dictionaries, and export them as a print-ready document.",
+        "In short: you maintain data elements, inside a collection, and publish them as a dictionary.",
+        "Data models are related but separate: they describe tables and how they join, and use their own Data Model Element collections."
+    ],
+    who: "Everyone.",
+    tips: [
+        "A dictionary follows the ownership of the collection it is named after, so the same people can edit both."
+    ],
+    related: ["c-metadata", "collections", "dict-overview", "de-open"]
+},
+{
+    id: "c-custodian",
+    area: "Concepts",
+    title: "What a custodian is",
+    question: "What is a custodian?",
+    summary: "A Data Custodian is the person responsible for a collection: they decide who can change it. “Custodian” is also the name of a role that lets people create and request collections.",
+    keywords: ["custodian", "data custodian", "co-custodian", "steward", "data steward", "responsible", "owner"],
+    synonyms: ["what is a custodian", "what is a data custodian", "what is a steward", "what is a co-custodian", "custodian vs steward"],
+    steps: [
+        "Data Custodian: set on each collection. They are accountable for its content and decide who else may edit it. Their name is shown in the Ownership panel and in the read-only banner.",
+        "Co-custodians: share the custodian's job for that collection. Custodians and co-custodians add or remove Editors and Co-custodians and set the Data Steward.",
+        "Editors: can change the collection's content, but not who has access.",
+        "Data Steward: recorded against the collection as the subject-matter contact. Being steward doesn't by itself give edit access.",
+        "The Custodian role (separate from being a collection's Data Custodian) lets someone create data models and Data Model Element collections and request ownership of collections.",
+        "Only Admins assign, transfer or remove a Data Custodian, usually by approving an ownership request."
+    ],
+    who: "Everyone can see who the custodian is. Admins assign custodians.",
+    tips: ["To get edit access, ask the collection's Data Custodian to add you as an Editor."],
+    related: ["ownership", "ownership-requests", "roles", "task-access"]
+}
+);
+
+/* ============================== Everyday tasks ============================== */
+window.TOPICS.push(
+{
+    id: "task-new-element",
+    area: "Everyday tasks",
+    title: "Creating a new data element",
+    question: "How do I create a new data element?",
+    summary: "Open the collection, choose File > New, fill in the blank form and save. The new element gets the next number in the collection and appears in the list.",
+    keywords: ["new data element", "create element", "add element", "new element", "file new", "new record"],
+    synonyms: ["how do i add a data element", "add a new field", "create a data element", "make a new element"],
+    steps: [
+        "Open Metadata > Data Elements on Home and choose the collection the element belongs to.",
+        "Choose File > New. A blank form opens on the right.",
+        "Fill in the details: title, field name, definition, data type, format, size, requirement status, permitted values and any guide for use, examples or notes.",
+        "Save with Ctrl+S or File > Save. The status shows “Creating…”, then “Created successfully”.",
+        "The element is added to the collection with the next free number and appears in the left list under its title.",
+        "Save New Version isn't available until the new element has been saved once."
+    ],
+    who: "Anyone with edit access to the collection: its custodians and editors, or an Admin.",
+    tips: [
+        "If File > New is missing, you're read-only for that collection. See “Why can't I edit this?”.",
+        "Data Model Element collections work the same way from Metadata > Data Model Elements."
+    ],
+    related: ["de-open", "de-versions", "trouble-cant-edit"]
+},
+{
+    id: "task-access",
+    area: "Everyday tasks",
+    title: "Getting access or a higher role",
+    question: "How do I request access or a higher role?",
+    summary: "Ask an Admin for a different role, ask a collection's Data Custodian to add you as an Editor, or, with the Custodian role, request ownership in the app.",
+    keywords: ["request access", "higher role", "permission", "editor access", "get access", "upgrade role", "role change"],
+    synonyms: ["how do i get edit access", "how do i become an editor", "how do i get permission", "i need access", "request a role"],
+    steps: [
+        "Check what you have now: the phone's Profile app shows your role, and a collection's Ownership panel shows what you can do there.",
+        "A different role (for example Editor or Custodian): roles are set centrally by an Admin. There's no in-app request form for roles, so contact an Admin and say what you need to do.",
+        "Edit access to one collection: ask its Data Custodian or a Co-custodian (named in the Ownership panel and in the read-only banner) to add you as an Editor.",
+        "Becoming a collection's custodian: with the Custodian role, open the collection and use Request ownership, or Request transfer of ownership if it already has a custodian. An Admin decides.",
+        "You hear about ownership decisions through the notifications bell and the phone's Mail app, and can track them in Profile > My requests."
+    ],
+    who: "Everyone can ask. Admins set roles and decide ownership requests; custodians add editors.",
+    tips: ["Role and access changes apply within about 15 seconds without restarting."],
+    related: ["roles", "ownership", "ownership-requests", "trouble-cant-edit"]
+},
+{
+    id: "task-restore",
+    area: "Everyday tasks",
+    title: "Restoring something you deleted",
+    question: "How do I restore something I deleted?",
+    summary: "Deleted data elements can be brought back from File > Deleted Items. Other deletions don't have a restore button, so ask an Admin straight away.",
+    keywords: ["restore", "undelete", "recover", "deleted items", "undo delete", "bring back"],
+    synonyms: ["i deleted something", "get back a deleted", "recover a deleted element", "restore deleted", "restore something i deleted", "restore something"],
+    steps: [
+        "Data elements (and Data Model Elements): open the collection and choose File > Deleted Items. Pick the element and click Restore.",
+        "If another element now uses the same place, choose “Rename & Restore” so both are kept.",
+        "Deleted elements stay in the collection's deleted area until restored, so they aren't lost.",
+        "Dictionaries: deleting a dictionary removes it, and there's no Deleted Items list for dictionaries. Its data elements are not affected, so it can be recreated.",
+        "Establishments: deleted records are moved aside rather than erased, and edits keep a backup, but there's no restore button. Ask an Admin as soon as possible if something was removed by mistake."
+    ],
+    who: "Anyone with edit access to the collection can restore data elements.",
+    tips: ["Restoring brings back the element with all its versions."],
+    related: ["de-delete-restore", "est-edit", "dict-edit"]
+}
+);
+
+/* ============================== Troubleshooting ============================== */
+window.TOPICS.push(
+{
+    id: "trouble-cant-edit",
+    area: "Troubleshooting",
+    title: "Why you can't edit something",
+    question: "Why can't I edit this?",
+    summary: "Usually because of your role, the collection's ownership, or being offline. The banner or status message on the page says which.",
+    keywords: ["troubleshooting", "can't edit", "cant edit", "read-only", "read only", "locked", "greyed out", "no save", "not allowed"],
+    synonyms: ["why can't i edit this", "why cant i edit", "why is it read only", "why can't i save", "edit button missing", "saving is disabled"],
+    steps: [
+        "Your role is User: Users can view and export everywhere but change nothing. Ctrl+S shows “Read-only: saving is disabled for your role.”",
+        "The collection is owned by someone else: a banner names its Data Custodian. Only the custodian, co-custodians and editors (and Admins) can change it. Ask the custodian to add you as an Editor.",
+        "The collection has no custodian yet: it's read-only for everyone except Admins until someone takes ownership (Custodian role users can request it). Unowned establishment folders are the exception: Editors and above can edit them.",
+        "An establishment field is marked Read-only: it comes from an Establishment List folder owned by another team. Ask that folder's Data Custodian to change it.",
+        "You're offline: an orange Offline mode pill shows, and nothing can be saved until the repository is reachable again.",
+        "The ownership record can't be read: changes are blocked until an Admin fixes it, and the message says so.",
+        "Some areas are always restricted: for example the Metadata Lookup glossary is managed by Admins."
+    ],
+    who: "Everyone.",
+    tips: [
+        "Open the Ownership panel in the title bar to see exactly who can edit this collection and what you can do."
+    ],
+    related: ["task-access", "roles", "ownership", "offline-mode"]
+},
+{
+    id: "trouble-not-saved",
+    area: "Troubleshooting",
+    title: "When changes didn't save",
+    question: "My changes didn't save, what happened?",
+    summary: "The app only says Saved once the change is stored. If a save is refused, it shows why and keeps your changes on screen as unsaved.",
+    keywords: ["troubleshooting", "didn't save", "not saved", "save failed", "lost changes", "unsaved", "changes gone", "nothing was saved"],
+    synonyms: ["my changes didn't save", "my changes disappeared", "why didn't it save", "save not working", "lost my work"],
+    steps: [
+        "Look at the status area and any message. Common reasons: you're offline; you no longer have edit access (roles and ownership are re-checked on every save); or, for establishments, someone else changed the same record since you opened it.",
+        "Your edits stay on screen marked “Unsaved changes”. Don't navigate away. Fix the cause and save again.",
+        "Offline: reconnect (for example VPN). When the Offline pill disappears, save again.",
+        "Access changed: open the Ownership panel to see who can edit, and ask the custodian if you need access back.",
+        "Establishment conflict: choose Reload values to see the latest version, then make your change again.",
+        "“No changes to save” means nothing had changed since the last save.",
+        "If you left the page and chose Discard, those changes were thrown away on purpose."
+    ],
+    who: "Everyone who edits.",
+    tips: [
+        "For long text, copy it somewhere safe before retrying if you're worried.",
+        "If a save keeps failing with no clear reason, send a bug report from the phone's Feedback app."
+    ],
+    related: ["saving", "unsaved-changes", "offline-mode", "trouble-overwritten"]
+},
+{
+    id: "trouble-overwritten",
+    area: "Troubleshooting",
+    title: "When someone else's save overwrote yours",
+    question: "Someone else's save overwrote mine",
+    summary: "For most records the last save wins: if two people edit the same item, the later save replaces the earlier one. Establishments are the exception and warn you instead.",
+    keywords: ["troubleshooting", "overwrote", "overwritten", "overwrite", "last save wins", "conflict", "same time", "lost edit"],
+    synonyms: ["someone overwrote my changes", "two people editing", "my edit was replaced", "who saved last"],
+    steps: [
+        "There's no locking. If two people have the same data element, data model or dictionary open, whoever saves last replaces the other person's changes.",
+        "Save corrects the current version in place, so an overwritten correction has to be made again. Earlier versions created with Save New Version are kept.",
+        "Establishments check for this: if the record changed since you opened it, your save is refused and you can Reload values and reapply your change.",
+        "To recover lost work, redo the change, or ask an Admin if it was significant.",
+        "To prevent it: agree who is editing what, keep edit access to the people who need it, and Watch items so you're told within about 15 seconds when someone else changes them."
+    ],
+    who: "Everyone who edits.",
+    tips: [
+        "Reopen an item before editing it if it's been open for a long time, so you start from the latest copy."
+    ],
+    related: ["watch-subscriptions", "t-concurrency", "trouble-not-saved", "de-versions"]
+},
+{
+    id: "trouble-slow",
+    area: "Troubleshooting",
+    title: "When the app is slow or won't load",
+    question: "The app is slow or won't load",
+    summary: "Most slowness comes from the network connection to the shared repository or from an update being applied at startup.",
+    keywords: ["troubleshooting", "slow", "won't load", "wont load", "loading", "hang", "frozen", "stuck", "performance", "startup"],
+    synonyms: ["the app is slow", "it won't open", "stuck on splash", "takes ages", "not loading", "blank screen"],
+    steps: [
+        "Stuck on the splash screen: it may be checking for or applying an update (“Checking for updates…”, “Applying updates…”). Give it a moment; it restarts itself after updating.",
+        "“Can't reach the metadata repository”: you're not connected to the network the repository is on. Connect (for example VPN) and choose Retry, or continue with limited features.",
+        "Slow lists or pages: everything is read from the shared repository over the network, so a slow connection or VPN makes pages slower. Establishment cards load in chunks as you scroll.",
+        "The derivation logic code box looks plain: its editor loads from the internet. Without that it falls back to a simple text box that still works.",
+        "Data Warehouse queries stop after 60 seconds. Use a smaller row limit or a narrower query, or Cancel.",
+        "If a page looks wrong, go Home and open it again, or close and restart the app."
+    ],
+    who: "Everyone.",
+    tips: [
+        "If it's still slow, send a bug report from the phone's Feedback app saying which page and roughly when."
+    ],
+    related: ["offline-mode", "patch-notes", "feedback"]
+}
+);
+
+/* ============================== What's new ============================== */
+window.TOPICS.push(
+{
+    id: "new-in-progress",
+    area: "What's new",
+    title: "What's in progress",
+    question: "What's planned next?",
+    summary: "Two areas already appear on Home but aren't active yet: Reference Data and Ward Mapping. They're in progress; there are no dates.",
+    keywords: ["planned", "roadmap", "next", "coming", "future", "in progress", "reference data", "ward mapping"],
+    synonyms: ["what's planned next", "what is coming", "upcoming features", "what's next", "future plans"],
+    steps: [
+        "Reference Data: shows in Home's Data menu but doesn't open anything yet. Reference Data collections are already recognised for ownership and dictionaries.",
+        "Ward Mapping: shows in Home's Data menu but isn't active yet.",
+        "Everything else in the menus is live.",
+        "Each release's changes appear in the patch notes on Home. Ask “What changed in the latest release?” for the newest one."
+    ],
+    who: "Everyone.",
+    tips: ["This lists only what's visible in the app. It isn't a commitment or a timetable."],
+    related: ["patch-notes", "home-navigation"]
 }
 );

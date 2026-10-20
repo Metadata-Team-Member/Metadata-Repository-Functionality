@@ -13,8 +13,8 @@ tips, and (for technical topics) what is under the hood.
   storage, roles, releases). Technical topics explain concepts, technologies and patterns,
   without internal locations, names or code.
 
-Current content: **guide v1.3.2, written for Metadata Repository app release 1.2.9**
-(43 user topics, 31 technical topics). The version is recorded here only; the page has no footer.
+Current content: **guide v1.4.0, written for Metadata Repository app release 1.2.9**
+(90 topics: 54 user topics, 35 technical topics and 1 release-notes entry). The version is recorded here only; the page has no footer.
 
 ## How to use it
 
@@ -50,13 +50,14 @@ and double-click `index.html`.
 | `js/app.js` | Question matching, suggestions, the help list and the answer card. |
 | `data/topics.js` | User topics, plus a small note of the app release the content describes. |
 | `data/topics-technical.js` | Technical topics (loaded after `topics.js`). |
+| `data/releases.js` | Release notes. Each release becomes a “What's new” topic (loaded last). |
 
 The content is a script file rather than a separate data file on purpose: browsers block pages opened
 from a folder from fetching data files, but they allow a script file.
 
 ## Adding or updating a topic
 
-User topics are in `data/topics.js` and technical topics in `data/topics-technical.js`. Topics are added in groups with `window.TOPICS.push( ... );`,
+User topics are in `data/topics.js` (including the Concepts, Everyday tasks, Troubleshooting and What's new areas) and technical topics in `data/topics-technical.js`. Topics are added in groups with `window.TOPICS.push( ... );`,
 one group per area. To add a topic, copy an existing one in the right group and change it:
 
 ```js
@@ -89,6 +90,16 @@ Technical topics use the same fields plus two more:
     under: ["contentEditable", "Synthetic input events"]  // optional "Under the hood" list
 }
 ```
+
+### Adding a release
+
+Add a new entry at the **top** of `window.RELEASES` in `data/releases.js` with `version`, a one-line
+`summary` and a list of user-facing `changes`. The first entry automatically answers
+"What changed in the latest release?"; older entries become "What changed in release x.y.z?".
+Nothing else needs changing.
+
+Every topic's `question` should land on that topic when typed word for word. After editing content,
+check this with `__guide.rank(question)` for the topics you touched (see Testing below).
 
 How matching works: the question is split into words, common words ("how", "does", "the", ...) are
 ignored, and each remaining word is compared with every topic's title (strongest), keywords and synonyms,
