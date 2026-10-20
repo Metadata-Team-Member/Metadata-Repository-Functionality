@@ -1,6 +1,7 @@
 /* Metadata Repository Functionality: minimalist question-and-answer page.
    Content comes from data/topics.js and data/topics-technical.js (window.TOPICS).
-   Ask a question and the single best-matching topic is shown. No network requests,
+   Ask a question and the single best-matching topic is shown. Typing offers up to four
+   suggested questions; asking "help" lists every question. No network requests,
    so it works from GitHub Pages, a shared folder or file://. */
 (function () {
     'use strict';
@@ -14,7 +15,11 @@
     var askForm = $('ask-form');
     var askInput = $('ask-input');
     var clearBtn = $('clear-btn');
+    var suggestEl = $('suggest');
     var MIN_SCORE = 3;
+    var MAX_SUGGEST = 4;
+    var AREAS = Array.isArray(window.TOPIC_AREAS) ? window.TOPIC_AREAS : [];
+    var TECH_AREAS = Array.isArray(window.TECH_AREAS) ? window.TECH_AREAS : [];
 
     // ------------------------------------------------------------------ text helpers
     function esc(s) {
@@ -196,11 +201,54 @@
         } catch (e) { /* some browsers block this on file:// */ }
     }
 
+    function isHelp(q) {
+        q = String(q || '').trim().toLowerCase();
+        return q === 'help' || q === '?';
+    }
+
+    // Every topic's question, grouped by area: user areas first, then technical areas.
+    function showHelp() {
+        var areas = AREAS.slice();
+        TOPICS.forEach(function (t) { if (areas.indexOf(t.area) < 0) areas.push(t.area); });
+        var userAreas = areas.filter(function (a) { return TECH_AREAS.indexOf(a) < 0; });
+        var techAreas = areas.filter(function (a) { return TECH_AREAS.indexOf(a) >= 0; });
+        var html = '<div class="card help"><h2 class="help-title">All questions</h2>';
+        userAreas.concat(techAreas).forEach(function (area) {
+            var items = TOPICS.filter(function (t) { return t.area === area; });
+            if (!items.length) return;
+            var label = TECH_AREAS.indexOf(area) >= 0 ? 'Technical · ' + area.replace(/^Tech:\s*/, '') : area;
+            html += '<section class="help-group"><h3>' + esc(label) + '</h3><ul>' +
+                items.map(function (t) {
+                    return '<li><button type="button" class="help-item" data-id="' + esc(t.id) + '">' +
+                        esc(questionOf(t)) + '</button></li>';
+                }).join('') + '</ul></section>';
+        });
+        answerEl.innerHTML = html + '</div>';
+        document.body.classList.add('has-answer');
+    }
+
+    function questionOf(t) {
+        return t.question || t.title;
+    }
+
+    // Show a specific topic as the answer, with its question in the box and a shareable URL.
+    function askTopic(id) {
+        var t = byId[id];
+        if (!t) return;
+        askInput.value = questionOf(t);
+        syncClear();
+        closeSuggest();
+        showTopic(id);
+        setUrl(askInput.value, id);
+        window.scrollTo(0, 0);
+    }
+
     // Matches across all topics (user and technical) and shows only the single best one.
     function ask(question, opts) {
         question = String(question || '').trim();
         opts = opts || {};
         if (!question) { clearAnswer(); if (!opts.noUrl) setUrl('', ''); return null; }
+        if (isHelp(question)) { showHelp(); if (!opts.noUrl) setUrl(question, ''); return 'help'; }
         var ranked = rank(question);
         var best = ranked.length && ranked[0].score >= MIN_SCORE ? ranked[0].t : null;
         if (best) showTopic(best.id);
@@ -214,8 +262,94 @@
         if (clearBtn) clearBtn.hidden = !askInput.value;
     }
 
-    // Back to the empty state: no text, no answer, clean URL, focus in the box.
-    function clearAll() {
+    // ------------------------------------------------------------------ suggestions (combobox)
+    var sugItems = [];
+    var sugIndex = -1;
+    var sugTimer = null;
+
+    function escRe(s) { return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
+
+    // Subtly mark the typed words where they start a word in the question.
+    function highlight(text, typed) {
+        var words = String(typed || '').toLowerCase().split(/[^a-z0-9#+.]+/)
+            .filter(function (w) { return w.length >= 2; })
+            .sort(function (a, b) { return b.length - a.length; });
+        if (!words.length) return esc(text);
+        var re = new RegExp('(^|[^a-z0-9])(' + words.map(escRe).join('|') + ')', 'ig');
+        var out = '', last = 0, m;
+        while ((m = re.exec(text))) {
+            var start = m.index + m[1].length;
+            out += esc(text.slice(last, start)) + '<mark>' + esc(m[2]) + '</mark>';
+            last = start + m[2].length;
+            if (m[0].length === 0) re.lastIndex++;
+        }
+        return out + esc(text.slice(last));
+    }
+
+    // Ranked with the same scoring as answers; word starts in the question help short partial words.
+    function suggestionsFor(typed) {
+        var q = norm(typed);
+        if (q.replace(/\s/g, '').length < 2 || isHelp(typed)) return [];
+        var scores = {};
+        rank(typed).forEach(function (r) { scores[r.t.id] = r.score; });
+        var last = q.split(' ').pop();
+        return TOPICS.map(function (t) {
+            var qq = ' ' + norm(questionOf(t)) + ' ' + norm(t.title) + ' ';
+            var prefix = (' ' + qq).indexOf(' ' + q) >= 0 ? 4 : (last.length >= 2 && qq.indexOf(' ' + last) >= 0 ? 1.5 : 0);
+            return { t: t, s: (scores[t.id] || 0) + prefix };
+        }).filter(function (r) { return r.s >= 2; })
+          .sort(function (a, b) { return b.s - a.s; })
+          .filter(function (r, i, all) { return r.s >= all[0].s * 0.4; })
+          .slice(0, MAX_SUGGEST)
+          .map(function (r) { return r.t; });
+    }
+
+    function renderSuggest() {
+        if (!suggestEl) return;
+        var typed = askInput.value;
+        sugItems = suggestionsFor(typed);
+        sugIndex = -1;
+        if (!sugItems.length) { closeSuggest(); return; }
+        suggestEl.innerHTML = sugItems.map(function (t, i) {
+            return '<li role="option" id="sug-' + i + '" class="sug" data-id="' + esc(t.id) + '" aria-selected="false">' +
+                highlight(questionOf(t), typed) + '</li>';
+        }).join('');
+        suggestEl.hidden = false;
+        askInput.setAttribute('aria-expanded', 'true');
+        askInput.removeAttribute('aria-activedescendant');
+    }
+
+    function isSuggestOpen() { return !!suggestEl && !suggestEl.hidden; }
+
+    function closeSuggest() {
+        clearTimeout(sugTimer);
+        if (!suggestEl) return;
+        suggestEl.hidden = true;
+        suggestEl.innerHTML = '';
+        sugItems = [];
+        sugIndex = -1;
+        askInput.setAttribute('aria-expanded', 'false');
+        askInput.removeAttribute('aria-activedescendant');
+    }
+
+    function moveSuggest(delta) {
+        if (!sugItems.length) return;
+        sugIndex = sugIndex + delta;
+        if (sugIndex < -1) sugIndex = sugItems.length - 1;
+        if (sugIndex >= sugItems.length) sugIndex = -1;
+        var opts = suggestEl.querySelectorAll('.sug');
+        for (var i = 0; i < opts.length; i++) {
+            var on = i === sugIndex;
+            opts[i].classList.toggle('active', on);
+            opts[i].setAttribute('aria-selected', on ? 'true' : 'false');
+        }
+        if (sugIndex >= 0) askInput.setAttribute('aria-activedescendant', 'sug-' + sugIndex);
+        else askInput.removeAttribute('aria-activedescendant');
+    }
+
+    // Back to the empty state: no text, no answer or help list, clean URL, focus in the box.
+    function resetPage() {
+        closeSuggest();
         askInput.value = '';
         syncClear();
         clearAnswer();
@@ -226,22 +360,59 @@
     // ------------------------------------------------------------------ events
     askForm.addEventListener('submit', function (e) {
         e.preventDefault();
+        closeSuggest();
         ask(askInput.value);
     });
 
-    askInput.addEventListener('input', syncClear);
+    askInput.addEventListener('input', function () {
+        syncClear();
+        clearTimeout(sugTimer);
+        if (norm(askInput.value).replace(/\s/g, '').length < 2) { closeSuggest(); return; }
+        sugTimer = setTimeout(renderSuggest, 120);
+    });
 
     askInput.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape' || e.key === 'Esc') {
+        if (e.key === 'ArrowDown' || e.key === 'Down') {
+            if (isSuggestOpen()) { e.preventDefault(); moveSuggest(1); }
+        } else if (e.key === 'ArrowUp' || e.key === 'Up') {
+            if (isSuggestOpen()) { e.preventDefault(); moveSuggest(-1); }
+        } else if (e.key === 'Enter') {
+            if (isSuggestOpen() && sugIndex >= 0) {
+                e.preventDefault();
+                askTopic(sugItems[sugIndex].id);
+            }
+        } else if (e.key === 'Escape' || e.key === 'Esc') {
             e.preventDefault();
-            clearAll();
+            if (isSuggestOpen()) closeSuggest();
+            else resetPage();
         }
+    });
+
+    askInput.addEventListener('blur', function () { closeSuggest(); });
+
+    if (suggestEl) {
+        // Keep focus in the box while clicking a suggestion, so blur doesn't close it first.
+        suggestEl.addEventListener('mousedown', function (e) { e.preventDefault(); });
+        suggestEl.addEventListener('click', function (e) {
+            var li = e.target.closest ? e.target.closest('.sug') : null;
+            if (li) askTopic(li.getAttribute('data-id'));
+        });
+    }
+
+    // Help list: each question asks itself.
+    answerEl.addEventListener('click', function (e) {
+        var b = e.target.closest ? e.target.closest('.help-item') : null;
+        if (b) askTopic(b.getAttribute('data-id'));
+    });
+
+    document.addEventListener('click', function (e) {
+        if (isSuggestOpen() && !(e.target.closest && e.target.closest('.ask-wrap'))) closeSuggest();
     });
 
     if (clearBtn) {
         clearBtn.addEventListener('click', function (e) {
             e.preventDefault();
-            clearAll();
+            resetPage();
         });
     }
 
@@ -253,8 +424,17 @@
         }
     });
 
+    // Short placeholder on narrow screens so the help hint isn't cut off mid-word.
+    var fullPlaceholder = askInput.getAttribute('placeholder') || '';
+    function syncPlaceholder() {
+        var narrow = window.matchMedia && window.matchMedia('(max-width: 600px)').matches;
+        askInput.setAttribute('placeholder', narrow ? 'Ask, or type help' : fullPlaceholder);
+    }
+    syncPlaceholder();
+    if (window.addEventListener) window.addEventListener('resize', syncPlaceholder);
+
     // Console hook for checking matches: __guide.rank('your question').
-    window.__guide = { rank: rank, ask: ask, show: showTopic, clear: clearAll };
+    window.__guide = { rank: rank, ask: ask, show: showTopic, clear: resetPage, suggest: suggestionsFor, askTopic: askTopic };
 
     // ------------------------------------------------------------------ start: empty until asked
     var hashId = decodeURIComponent((location.hash || '').replace(/^#/, ''));

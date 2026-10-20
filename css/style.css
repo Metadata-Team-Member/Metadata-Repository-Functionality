@@ -132,6 +132,70 @@ body.has-answer .page { padding-top: 9vh; }
 .ask-btn:hover { background: var(--green-hover); }
 .ask-btn:focus-visible { outline: 2px solid var(--green-soft); outline-offset: 2px; }
 
+/* ---------- Suggestions (combobox list) ---------- */
+.ask-wrap { position: relative; }
+.suggest {
+    position: absolute;
+    left: 0; right: 0;
+    top: calc(100% + 6px);
+    z-index: 10;
+    list-style: none;
+    background: var(--card);
+    border: 1px solid var(--border-2);
+    border-radius: 12px;
+    padding: 6px;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.55);
+}
+.suggest[hidden] { display: none; }
+.sug {
+    padding: 11px 16px;
+    border-radius: 8px;
+    color: var(--soft);
+    font-size: clamp(1rem, 1.5vw, 1.1rem);
+    cursor: pointer;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.sug:hover, .sug.active { background: #1F1F1F; color: var(--strong); }
+.sug.active { box-shadow: inset 2px 0 0 var(--green-soft); }
+.sug mark { background: none; color: var(--strong); font-weight: 600; }
+
+/* ---------- Help list ---------- */
+.help { max-height: 64vh; overflow-y: auto; }
+.help-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--strong);
+    margin-bottom: 4px;
+}
+.help-group { margin-top: 22px; }
+.help-group h3 {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--green-soft);
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+.help-group ul { list-style: none; }
+.help-item {
+    display: block;
+    width: 100%;
+    text-align: left;
+    background: none;
+    border: none;
+    border-radius: 6px;
+    color: var(--soft);
+    font: inherit;
+    font-size: clamp(0.98rem, 1.4vw, 1.05rem);
+    padding: 5px 10px;
+    margin-left: -10px;
+    cursor: pointer;
+}
+.help-item:hover { color: var(--strong); background: #1C1C1C; }
+.help-item:focus-visible { outline: 1px solid var(--green-soft); }
+
 /* ---------- Answer ---------- */
 .answer { margin-top: 36px; }
 .answer:empty { display: none; }
@@ -212,6 +276,8 @@ body.has-answer .page { padding-top: 9vh; }
     .ask-btn { padding: 10px 16px; }
     .ask-divider { margin: 0 14px 0 8px; }
     .clear-btn { margin-left: 4px; }
+    .sug { white-space: normal; }
+    .help { max-height: none; }
 }
 
 @media print {

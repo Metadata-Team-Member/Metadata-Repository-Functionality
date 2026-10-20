@@ -13,17 +13,22 @@ tips, and (for technical topics) what is under the hood.
   storage, roles, releases). Technical topics explain concepts, technologies and patterns,
   without internal locations, names or code.
 
-Current content: **guide v1.2.1, written for Metadata Repository app release 1.2.9**
+Current content: **guide v1.3.0, written for Metadata Repository app release 1.2.9**
 (43 user topics, 31 technical topics). The version is recorded here only; the page has no footer.
 
 ## How to use it
 
 - The page starts empty: a heading, a subtitle and one question box.
+- **Suggestions:** after two or more characters, up to four suggested questions drop down under the box,
+  with the typed words subtly highlighted. Click one, or use Up/Down and Enter, to ask it straight away.
+  Enter with nothing highlighted asks what you typed. Escape closes the list first; a second Escape clears.
+- **Help:** ask `help` (or `?`) to list every question, grouped by area (user areas first, then technical).
+  Click any question to see its answer. The placeholder carries a quiet hint about this.
 - **Ask a question** and press Enter or **Ask**. The best-matching topic appears below the box.
   If nothing matches well enough, you see a single line: "No match — try rephrasing."
 - Press `/` anywhere to jump to the question box.
 - Click **×** (shown only when there is text, set well apart from Ask) or press **Esc** in the box
-  to clear the question and the answer and return to the empty page with a clean link.
+  to clear the question and the answer (or help list) and return to the empty page with a clean link.
 - After you ask, the address bar holds a shareable link, for example
   `index.html?q=how%20does%20the%20toolbar%20work#t-toolbar`. Links work in either form:
   `index.html?q=how do filters work` (asks the question) or `index.html#est-filters` (opens that topic).
@@ -37,7 +42,7 @@ and double-click `index.html`.
 | --- | --- |
 | `index.html` | The page. |
 | `css/style.css` | Minimalist dark theme. |
-| `js/app.js` | Question matching and the answer card. |
+| `js/app.js` | Question matching, suggestions, the help list and the answer card. |
 | `data/topics.js` | User topics, plus a small note of the app release the content describes. |
 | `data/topics-technical.js` | Technical topics (loaded after `topics.js`). |
 
@@ -54,6 +59,7 @@ one group per area. To add a topic, copy an existing one in the right group and 
     id: "est-filters",                       // unique, lower-case, used in links (#est-filters)
     area: "Establishments",                  // shown as the small label above the title
     title: "Establishment filters",          // short, shown as the heading
+    question: "How do establishment filters work?",  // natural question used in suggestions and help
     summary: "One sentence that answers the question.",
     keywords: ["filter", "filters", "status"],          // words people will type (strong match)
     synonyms: ["narrow down", "refine", "only show"],   // other ways to say it, phrases are fine

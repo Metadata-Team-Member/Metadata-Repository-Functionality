@@ -13,13 +13,17 @@
             <p class="subtitle">How does that work?</p>
         </header>
 
-        <form id="ask-form" class="ask" role="search" autocomplete="off">
-            <label for="ask-input" class="visually-hidden">Ask a question</label>
-            <input id="ask-input" type="text" enterkeyhint="search" placeholder="e.g. What is the tech stack?" spellcheck="false" autofocus>
-            <button type="button" id="clear-btn" class="clear-btn" aria-label="Clear question and answer" title="Clear (Esc)" hidden>&times;</button>
-            <span class="ask-divider" aria-hidden="true"></span>
-            <button type="submit" class="ask-btn">Ask</button>
-        </form>
+        <div class="ask-wrap">
+            <form id="ask-form" class="ask" role="search" autocomplete="off">
+                <label for="ask-input" class="visually-hidden">Ask a question</label>
+                <input id="ask-input" type="text" enterkeyhint="search" placeholder="e.g. What is the tech stack?  ·  type help for all questions" spellcheck="false" autofocus
+                       role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="suggest" aria-haspopup="listbox">
+                <button type="button" id="clear-btn" class="clear-btn" aria-label="Clear question and answer" title="Clear (Esc)" hidden>&times;</button>
+                <span class="ask-divider" aria-hidden="true"></span>
+                <button type="submit" class="ask-btn">Ask</button>
+            </form>
+            <ul id="suggest" class="suggest" role="listbox" aria-label="Suggested questions" hidden></ul>
+        </div>
 
         <div id="answer" class="answer" aria-live="polite"></div>
         <noscript><p class="quiet">Turn on JavaScript to use this page.</p></noscript>
