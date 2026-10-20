@@ -13,7 +13,7 @@ tips, and (for technical topics) what is under the hood.
   storage, roles, releases). Technical topics explain concepts, technologies and patterns,
   without internal locations, names or code.
 
-Current content: **guide v1.3.1, written for Metadata Repository app release 1.2.9**
+Current content: **guide v1.3.2, written for Metadata Repository app release 1.2.9**
 (43 user topics, 31 technical topics). The version is recorded here only; the page has no footer.
 
 ## How to use it
@@ -24,10 +24,11 @@ Current content: **guide v1.3.1, written for Metadata Repository app release 1.2
   Enter with nothing highlighted asks what you typed. Escape closes the list first; a second Escape clears.
 - **Help:** ask `help` (or `?`) to list every question, grouped by area (user areas first, then technical).
   Click any question to see its answer.
-- The **?** at the end of the subtitle is the help hint: it glows softly twice shortly after the page
-  opens (not if the system asks for reduced motion), shows "See all questions — or type help" on hover
-  or focus, and opens the help list on click, Enter or Space. A no-match answer also offers
-  "see all questions".
+- The **?** at the end of the subtitle is the help hint: on the empty page it flashes softly green twice,
+  first about 1.5 s after the page opens and then every 10 s. It stays still while you type, while
+  suggestions, an answer or the help list are showing, while the tab is hidden, and always when the
+  system asks for reduced motion. Click it, or focus it and press Enter or Space, to open the help list.
+  A no-match answer also offers "see all questions".
 - **Ask a question** and press Enter or **Ask**. The best-matching topic appears below the box.
   If nothing matches well enough, you see a single line: "No match — try rephrasing, or see all questions".
 - Press `/` anywhere to jump to the question box.

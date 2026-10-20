@@ -181,6 +181,7 @@
                 section('Under the hood', t.audience === 'technical' ? list(t.under, 'under', 'ul') : '') +
             '</article>';
         document.body.classList.add('has-answer');
+        syncFlash();
         return true;
     }
 
@@ -188,11 +189,13 @@
         answerEl.innerHTML = '<p class="quiet">' + esc(text) +
             (withHelpLink ? ', or <button type="button" class="link-btn open-help">see all questions</button>' : '') + '</p>';
         document.body.classList.add('has-answer');
+        syncFlash();
     }
 
     function clearAnswer() {
         answerEl.innerHTML = '';
         document.body.classList.remove('has-answer');
+        syncFlash();
     }
 
     function setUrl(q, id) {
@@ -226,6 +229,7 @@
         });
         answerEl.innerHTML = html + '</div>';
         document.body.classList.add('has-answer');
+        syncFlash();
     }
 
     function questionOf(t) {
@@ -261,6 +265,14 @@
     // Show the clear button only when there is text in the box.
     function syncClear() {
         if (clearBtn) clearBtn.hidden = !askInput.value;
+        syncFlash();
+    }
+
+    // The subtitle "?" flashes only on the empty page with the tab visible.
+    function syncFlash() {
+        var quiet = !!askInput.value || !!answerEl.innerHTML ||
+            (suggestEl && !suggestEl.hidden) || !!document.hidden;
+        document.body.classList.toggle('q-quiet', quiet);
     }
 
     // ------------------------------------------------------------------ suggestions (combobox)
@@ -317,6 +329,7 @@
         }).join('');
         suggestEl.hidden = false;
         askInput.setAttribute('aria-expanded', 'true');
+        syncFlash();
         askInput.removeAttribute('aria-activedescendant');
     }
 
@@ -331,6 +344,7 @@
         sugIndex = -1;
         askInput.setAttribute('aria-expanded', 'false');
         askInput.removeAttribute('aria-activedescendant');
+        syncFlash();
     }
 
     function moveSuggest(delta) {
@@ -451,6 +465,8 @@
             askInput.select();
         }
     });
+
+    document.addEventListener('visibilitychange', syncFlash);
 
     // Console hook for checking matches: __guide.rank('your question').
     window.__guide = { rank: rank, ask: ask, show: showTopic, clear: resetPage, suggest: suggestionsFor, askTopic: askTopic, help: openHelp };
