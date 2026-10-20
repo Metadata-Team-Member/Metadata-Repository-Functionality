@@ -708,7 +708,7 @@ window.TOPICS.push(
     question: "How does code-to-description mapping work internally?",
     summary: "Mapping files pair codes with descriptions per field. They are generated from data element permitted values and merged by the Establishments page.",
     keywords: ["mapping", "lookups", "code description", "permitted values", "mapped values", "mapping file", "lookup table"],
-    synonyms: ["how does mapping work", "how are codes translated", "code lookup", "decode internals"],
+    synonyms: ["how does mapping work", "how are codes translated", "code lookup", "decode internals", "code-to-description mapping internally", "how does code-to-description mapping work internally"],
     steps: [
         "A data element's permitted values are a list of code and description pairs.",
         "File > Export > Mapping File (Editor and above) reads every element in the open collection, takes each element's current permitted values, and writes a mapping file: field name to code to description.",
@@ -781,7 +781,7 @@ window.TOPICS.push(
     question: "How are Data Warehouse queries kept safe?",
     summary: "Queries run with your own Windows credentials, and the host only allows a single read-only SELECT or WITH statement, with row caps and a timeout.",
     keywords: ["sql", "query", "read only", "validation", "integrated security", "timeout", "row limit", "sql server", "injection"],
-    synonyms: ["how is sql restricted", "can i run updates", "is the warehouse safe", "query validation"],
+    synonyms: ["how is sql restricted", "can i run updates", "is the warehouse safe", "query validation", "how are data warehouse queries kept safe", "queries kept safe"],
     steps: [
         "Connections use the SQL Server client with Windows Integrated Security, so the database's own permissions apply to you.",
         "Before running, the host strips comments and string literals, then checks there is a single statement and that it starts with SELECT or WITH.",

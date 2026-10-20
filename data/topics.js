@@ -10,7 +10,9 @@ window.GUIDE_META = {
 
 window.TOPIC_AREAS = [
     "Concepts",
+    "Data quality & governance",
     "Everyday tasks",
+    "Getting the app",
     "Getting started",
     "Establishments",
     "Data Elements",
@@ -440,7 +442,7 @@ window.TOPICS.push(
     question: "What is a dictionary?",
     summary: "A dictionary is a document-style view of a collection's data elements, with a cover page, preamble, abbreviations and a page per element.",
     keywords: ["dictionary", "dictionaries", "data dictionary", "cover page", "preamble", "abbreviations", "sensitivity"],
-    synonyms: ["publication", "document", "open dictionary", "read dictionary", "guide for use", "examples", "notes"],
+    synonyms: ["publication", "document", "open dictionary", "read dictionary", "guide for use", "examples", "notes", "what is a dictionary"],
     steps: [
         "Open Library > Dictionaries on Home and choose a collection.",
         "Each dictionary appears as a card. Click it (or right-click > Open Dictionary) to open it.",
@@ -580,7 +582,7 @@ window.TOPICS.push(
     question: "How do I run a Data Warehouse query?",
     summary: "The Query tab runs one read-only SELECT query at a time, with a row limit, history and saved queries.",
     keywords: ["query", "select", "run query", "sql query", "saved queries", "query history", "max rows", "cancel"],
-    synonyms: ["write sql", "run sql", "read only query", "with statement", "export query results"],
+    synonyms: ["write sql", "run sql", "read only query", "with statement", "query tab", "run a data warehouse query", "run a query"],
     steps: [
         "Select the Query tab, type your SQL and click Run.",
         "Only one read-only statement is allowed. It must start with SELECT or WITH. Anything that would change data is refused with a clear message.",
@@ -606,7 +608,7 @@ window.TOPICS.push(
     question: "How do I compare two CSV files?",
     summary: "Compare CSV shows the rows that are only in file A, only in file B, or in both, and can highlight changed cells.",
     keywords: ["compare csv", "csv", "compare", "diff", "difference", "key columns", "full row", "only a", "only b"],
-    synonyms: ["compare files", "what changed", "reconcile", "match rows", "spreadsheet compare", "diff report"],
+    synonyms: ["compare files", "compare two files", "reconcile", "spreadsheet compare", "how do i compare two csv files"],
     steps: [
         "Open Tools > Compare CSV on Home.",
         "Load File A and File B. Both need a header row.",
@@ -757,7 +759,7 @@ window.TOPICS.push(
     question: "How does Metabot work?",
     summary: "Metabot is the built-in assistant: ask it questions, have it open pages, find elements, draft SQL or file feedback for you.",
     keywords: ["metabot", "assistant", "ai", "chat", "bot", "llm", "grok", "gemini"],
-    synonyms: ["ask a question", "help bot", "chatbot", "ai assistant", "talk to"],
+    synonyms: ["ask a question", "help bot", "chatbot", "ai assistant", "talk to", "how does metabot work"],
     steps: [
         "Open the Metabot app on the phone and type a message. Use the expand button for a bigger chat window.",
         "Metabot knows which page you are on and what you have open, so you can ask about it directly.",
@@ -1063,7 +1065,7 @@ window.TOPICS.push(
     steps: [
         "Data on its own is just values, such as “3” or “2024-05-01”. Metadata tells you what those values mean: which field they belong to, what the field is for, and how it should be filled in.",
         "Typical metadata for one field (a data element): its name and definition, data type and format (for example a date as DD/MM/YYYY), size, whether it is mandatory, its permitted values (code and description pairs such as 1 = Public, 2 = Private), how it is derived, and its version dates.",
-        "It also says who is responsible: each collection has a Data Custodian who looks after it and approves changes, and may have a Data Steward.",
+        "It also says who is responsible: each collection has a Data Custodian who looks after it and decides who can change it, and may have a Data Steward.",
         "Why it matters for health data: the same word can mean different things in different systems. Agreed definitions and permitted values mean counts, reports and data linkage compare like with like.",
         "It underpins data quality. When everyone records a field the same way, errors are easier to spot, and analysts know exactly what they are looking at.",
         "How the Metadata Repository manages it: data elements hold definitions, formats and permitted values, with dated versions. Collections group them and carry ownership. Dictionaries publish them as readable documents. Data models describe tables and how they relate. Metadata Lookup gives hover definitions for common terms. Establishment codes are shown with their descriptions using mapping files."
@@ -1296,5 +1298,380 @@ window.TOPICS.push(
     who: "Everyone.",
     tips: ["This lists only what's visible in the app. It isn't a commitment or a timetable."],
     related: ["patch-notes", "home-navigation"]
+}
+);
+
+/* ============================== Data Warehouse in depth ============================== */
+window.TOPICS.push(
+{
+    id: "dw-what",
+    area: "Data Warehouse",
+    title: "What you can query in the Data Warehouse",
+    question: "What can I query in the Data Warehouse?",
+    summary: "Any table or view your own database permissions let you see, read-only, one query at a time.",
+    keywords: ["what can i query", "tables", "views", "columns", "primary key", "nullable", "preview", "read only", "data warehouse"],
+    synonyms: ["what tables can i see", "which tables", "what data is there", "can i see views", "what is in the warehouse"],
+    steps: [
+        "After you connect, the Tables list shows every table and view that your Windows account is allowed to see. Type in the filter box to narrow it by schema or name.",
+        "Columns tab: each column's position, name, data type, whether it can be empty (Nullable) and whether it is part of the primary key (PK).",
+        "Preview tab: the first rows of the table, from 25 up to 2,500. No query writing needed.",
+        "Query tab: write your own read-only query across the tables you can see, for example to join tables, filter rows or count records.",
+        "Everything is read-only. You can look at and copy data, but nothing you do here changes the warehouse.",
+        "Empty values show as NULL. Very long text is cut short with “…” and dates are shown in a standard year-month-day format."
+    ],
+    who: "Everyone. What you can see is decided by the database, not by your Metadata Repository role.",
+    tips: [
+        "If a table you expect is missing, you probably don't have permission to it in the database. Ask the database's owner, not a Metadata Repository Admin.",
+        "Use the data elements for a field's meaning, and the Data Warehouse to see what the data actually looks like."
+    ],
+    related: ["dw-connect", "dw-query", "dw-blocked", "dw-who"]
+},
+{
+    id: "dw-blocked",
+    area: "Data Warehouse",
+    title: "Why a Data Warehouse query is blocked",
+    question: "Why is my query blocked?",
+    summary: "The Data Warehouse only runs a single read-only query that starts with SELECT or WITH. Anything else is stopped before it reaches the database, with a message saying why.",
+    keywords: ["blocked", "rejected", "refused", "not allowed", "query rejected", "read only", "select", "with", "semicolon", "single statement"],
+    synonyms: ["why was my query rejected", "query not allowed", "why won't my query run", "query refused", "only select allowed", "query safety rules"],
+    steps: [
+        "It must be one statement. Two queries separated by a semicolon are refused with “Only a single batch / statement is allowed”. A single semicolon at the very end is fine.",
+        "It must start with SELECT or WITH. Anything else gets “Only SELECT / WITH (read-only) queries are allowed.”",
+        "It can't contain words that change data or the database, such as INSERT, UPDATE, DELETE, MERGE, CREATE, ALTER, DROP or TRUNCATE. SELECT … INTO is also blocked, as are running procedures and other system commands. The message names the word that was found.",
+        "It can't be extremely long. Very large scripts are refused as too long.",
+        "Comments, text in quotes and names in square brackets are ignored by these checks, so a word inside them won't block your query.",
+        "If the query passes these checks but the database refuses it (for example a typo or a table you can't access), the database's own error message is shown instead."
+    ],
+    who: "Everyone who uses the Data Warehouse. The rules are the same for every role.",
+    tips: [
+        "If a column is literally called something like Update or Delete, put the name in square brackets, for example [Update].",
+        "To make a copy of data, run the SELECT here and use Export CSV rather than SELECT … INTO."
+    ],
+    related: ["dw-query", "dw-errors", "t-warehouse-internals"]
+},
+{
+    id: "dw-saved",
+    area: "Data Warehouse",
+    title: "Saving and reusing Data Warehouse queries",
+    question: "How do I save or reuse a query?",
+    summary: "Save gives a query a name so you can load it again later, and Query history keeps your recent runs. Both stay on your own computer.",
+    keywords: ["save query", "saved queries", "reuse", "query history", "load query", "favourite", "rename query", "delete query"],
+    synonyms: ["save my sql", "keep a query", "run it again", "previous queries", "recent queries", "share a query"],
+    steps: [
+        "Write your query on the Query tab and click Save. Give it a name (up to 80 characters). If you are working on a table, its name is suggested.",
+        "If a saved query already has that name, you're asked whether to overwrite it.",
+        "To use it again, pick it from the Saved queries list. It fills the Query box; click Run when you're ready.",
+        "To remove one, select it in Saved queries and click Delete, then confirm.",
+        "Query history keeps your last 30 runs, newest first, each marked ok, failed or cancelled with the time. Pick one to put it back in the Query box.",
+        "Up to 40 saved queries are kept."
+    ],
+    who: "Everyone who uses the Data Warehouse.",
+    tips: [
+        "Saved queries and history are stored on this computer only. They don't follow you to another PC and other people can't see them.",
+        "To share a query, copy its text into a message or a data element's notes."
+    ],
+    related: ["dw-query", "dw-results"]
+},
+{
+    id: "dw-results",
+    area: "Data Warehouse",
+    title: "Viewing and exporting Data Warehouse results",
+    question: "How do I see the results or export them?",
+    summary: "Results appear in a grid under the query, with a row count, and can be copied or exported as CSV or copied as TSV.",
+    keywords: ["results", "export", "export csv", "copy csv", "copy tsv", "download", "include headers", "load more", "max rows", "grid"],
+    synonyms: ["export query results", "save the results", "download results", "copy to excel", "get more rows", "results truncated", "see the results", "how do i see the results"],
+    steps: [
+        "After Run, the grid shows the rows. The line above it gives the number of rows, the row limit and how long the query took.",
+        "Max rows sets how many rows come back: 25, 100, 500, 1,000 or 2,500. If there were more, the line says “capped at max rows” and a Load more button reruns the query with the next limit up.",
+        "Copy CSV or Copy TSV puts the results on your clipboard. TSV pastes neatly into a spreadsheet.",
+        "Export CSV downloads a file, named with the date and time.",
+        "Include headers decides whether the column names are included. Your choice is remembered.",
+        "The Preview tab has the same Copy and Export buttons for a table's first rows."
+    ],
+    who: "Everyone who uses the Data Warehouse.",
+    tips: [
+        "Copy and export include only the rows that were fetched, so raise Max rows first if you need more (up to 2,500).",
+        "For very large extracts, use the tools your database team provides. The Data Warehouse page is for looking and small exports.",
+        "Results stay on your computer and are never sent to Metabot."
+    ],
+    related: ["dw-query", "dw-saved", "export-overview"]
+},
+{
+    id: "dw-who",
+    area: "Data Warehouse",
+    title: "Who can use the Data Warehouse",
+    question: "Who can use the Data Warehouse?",
+    summary: "Everyone can open it. What you can see and query depends on the database permissions of your own Windows account.",
+    keywords: ["who can use", "data warehouse access", "permission", "windows login", "integrated security", "role"],
+    synonyms: ["do i need access", "can i use the data warehouse", "data warehouse permissions", "why can't i see any tables"],
+    steps: [
+        "Open Sources > Data Warehouse on Home. Any Metadata Repository role can open the page.",
+        "When you connect, your own Windows login is used. No password is asked for or stored.",
+        "The database decides what you can see. You only get the tables, views and rows your account has been granted.",
+        "Being an Admin in the Metadata Repository gives you no extra database access, and being a User doesn't take any away.",
+        "Everything is read-only for everyone."
+    ],
+    who: "Everyone, within their own database permissions.",
+    tips: [
+        "If you need access to more data, ask the team that manages the database to grant it to your Windows account."
+    ],
+    related: ["dw-connect", "dw-what", "roles"]
+},
+{
+    id: "dw-errors",
+    area: "Data Warehouse",
+    title: "When the Data Warehouse connection or a query fails",
+    question: "What happens if the connection fails?",
+    summary: "A failed connection shows the reason in red and clears the table list. A failed query shows its error above the grid and is kept in Query history.",
+    keywords: ["connection failed", "can't connect", "cannot connect", "error", "timeout", "login failed", "cancel", "query failed"],
+    synonyms: ["data warehouse not working", "won't connect", "connection error", "query timed out", "query failed", "status says error"],
+    steps: [
+        "Connecting gives up after about 15 seconds. The error from the database appears in red under Connect, the status in the title bar changes to Error and the table list is cleared.",
+        "Common causes: a mistyped server or database name, not being on the network, or your account not having access to that database.",
+        "Check the names and click Connect again. The last server and database you used are remembered.",
+        "A query that runs for more than 60 seconds is stopped. Click Cancel to stop one sooner. “Query cancelled.” is shown.",
+        "If a query fails, the reason is shown above the grid, and the query is kept in Query history marked failed so you can fix it and run it again.",
+        "Nothing is changed in the database when something fails, because only read-only queries are run."
+    ],
+    who: "Everyone who uses the Data Warehouse.",
+    tips: [
+        "If no one can connect, the database may be unavailable. Try again later or tell the team that manages it.",
+        "A very slow query usually needs a filter (WHERE) or fewer columns."
+    ],
+    related: ["dw-connect", "dw-blocked", "dw-query"]
+}
+);
+
+/* ============================== Compare CSV in practice ============================== */
+window.TOPICS.push(
+{
+    id: "csv-difference",
+    area: "Compare CSV",
+    title: "What a Compare CSV difference looks like",
+    question: "What does a difference look like?",
+    summary: "A difference is either a row found in only one file, or (in Key columns mode) a matched pair of rows whose other cells disagree, highlighted cell by cell.",
+    keywords: ["difference", "differences", "highlight", "changed cells", "only a", "only b", "matched pairs", "cell diff", "ambiguous"],
+    synonyms: ["what does a diff look like", "how are differences shown", "highlighted cells", "what is only a", "what changed between files"],
+    steps: [
+        "Only A: rows in File A with no match in File B. Only B: the reverse. These are the rows that were added or removed.",
+        "Full row mode: a row only matches if every column is the same, so a single changed cell makes that row appear once in Only A and once in Only B.",
+        "Key columns mode: rows are paired on the keys you chose. The Matched tab shows each pair as an A row above a B row.",
+        "In a pair, key columns are marked ✦, cells that differ are highlighted, and identical cells stay plain. Hover a highlighted cell to see both values.",
+        "The note above the results gives the key columns and how many pairs have cell differences.",
+        "A pair tagged “amb” is ambiguous: the key appears more than once in a file, so the pairing is a best guess."
+    ],
+    who: "Everyone.",
+    tips: [
+        "If almost every row shows as different in Full row mode, switch to Key columns so you see which cells changed."
+    ],
+    related: ["csv-compare", "csv-matching", "csv-results"]
+},
+{
+    id: "csv-matching",
+    area: "Compare CSV",
+    title: "How Compare CSV matches rows",
+    question: "How does Compare CSV match rows?",
+    summary: "Columns are lined up by header name, then rows are matched either on the whole row or on the key columns you pick.",
+    keywords: ["match", "matching", "key columns", "full row", "header", "duplicate keys", "case", "spaces", "align columns"],
+    synonyms: ["how are rows matched", "match by column", "match by key", "which mode should i use", "duplicate key warning", "how does compare csv match rows"],
+    steps: [
+        "Columns are matched by header name, not position. If the files have different columns, all columns from both are used and missing cells count as empty; a note tells you this happened.",
+        "Full row: two rows match when every value is the same. Best for checking whether two extracts are identical.",
+        "Key columns: tick one or more columns that identify a record, such as a code or an ID. Rows with the same key values are paired, and the other columns are compared.",
+        "Spaces at the start and end of values are ignored. Everything else counts, including upper and lower case, so “abc” and “ABC” are different.",
+        "If a key appears more than once in a file, a duplicate keys warning appears. Rows are paired in file order, extra rows go to Only A or Only B, and the pairs are flagged ambiguous.",
+        "Duplicate column names in a file are warned about too."
+    ],
+    who: "Everyone.",
+    tips: [
+        "Choose key columns that are unique in both files to avoid ambiguous pairs."
+    ],
+    related: ["csv-compare", "csv-difference", "csv-files"]
+},
+{
+    id: "csv-results",
+    area: "Compare CSV",
+    title: "Using Compare CSV results",
+    question: "What should I do with the results?",
+    summary: "Check the counts, look at the samples, then export what you need to follow up: Only A, Only B, a diff report or paired diffs.",
+    keywords: ["results", "export", "diff report", "paired diffs", "only a", "only b", "follow up", "reconcile", "counts"],
+    synonyms: ["what next", "export differences", "save the comparison", "reconcile files", "use the comparison", "what should i do with the results", "what do i do with the comparison"],
+    steps: [
+        "Start with the summary counts. If Only A and Only B are both zero, the files hold the same records.",
+        "Look at the samples on each tab. The tabs show the first rows only for speed; the exports always include every row.",
+        "Export Only A or Only B for the rows missing from the other file, for example records to add or remove.",
+        "Export Diff report for one file with every unmatched row and a column saying which side (A or B) it came from.",
+        "In Key columns mode, Export Paired diffs gives one row per changed record: the keys, then the A and B values side by side for each changed column, and which columns changed.",
+        "Then follow up at the source: correct the data, or update the data element if a definition or permitted value has changed."
+    ],
+    who: "Everyone. The exports are saved to your computer.",
+    tips: [
+        "Nothing from Compare CSV is saved to the repository. Keep the exported files if you need a record of the comparison.",
+        "The exported files open in any spreadsheet."
+    ],
+    related: ["csv-compare", "csv-difference", "export-overview"]
+},
+{
+    id: "csv-files",
+    area: "Compare CSV",
+    title: "Which files Compare CSV can read",
+    question: "What files can I compare?",
+    summary: "Two comma-separated (CSV) text files, each with a header row. Each file is read up to its first 50,000 rows.",
+    keywords: ["files", "csv", "file type", "header row", "limit", "50,000", "size", "excel", "tsv", "rows"],
+    synonyms: ["which files", "can i compare excel", "file too big", "how many rows", "file limits", "supported files"],
+    steps: [
+        "Use CSV files: plain text, comma-separated, with the column names in the first row.",
+        "Values in double quotes can contain commas or line breaks, and doubled quotes inside them are handled.",
+        "Each file is read up to its first 50,000 rows. If a file is longer, you're warned that only the first 50,000 rows are compared.",
+        "Empty rows at the end of a file are ignored.",
+        "A file that is empty, has no header row or has an unclosed quote shows an error saying which file is the problem.",
+        "Files are read on your own computer and are not uploaded or saved anywhere."
+    ],
+    who: "Everyone.",
+    tips: [
+        "To compare spreadsheets, save each sheet as CSV first.",
+        "Data Warehouse results exported with Export CSV can be compared directly."
+    ],
+    related: ["csv-compare", "csv-matching", "dw-results"]
+}
+);
+
+/* ============================== Data quality & governance ============================== */
+window.TOPICS.push(
+{
+    id: "gov-quality",
+    area: "Data quality & governance",
+    title: "Why metadata matters for data quality",
+    question: "Why does metadata matter for data quality?",
+    summary: "Data can only be checked, compared and trusted when everyone agrees what each field means and how it should be recorded. Metadata is that agreement.",
+    keywords: ["data quality", "quality", "accuracy", "consistency", "standards", "trust", "governance"],
+    synonyms: ["why does metadata matter", "how does metadata help quality", "why keep definitions", "why is this important"],
+    steps: [
+        "Consistency: a clear definition and format mean every system and person records a field the same way.",
+        "Validity: permitted values (codes and descriptions) say exactly which values are allowed, so anything else stands out as an error.",
+        "Comparability: dated versions show when a definition or code set changed, so figures from different periods are compared fairly.",
+        "Accountability: each collection has a Data Custodian, so there is someone responsible for keeping its definitions right.",
+        "Understanding: analysts and new staff can look up what a field means instead of guessing.",
+        "In the Metadata Repository this comes together in data elements, collections, dictionaries and the Metadata Lookup glossary."
+    ],
+    who: "Everyone.",
+    tips: [
+        "Compare CSV and the Data Warehouse help you check real data against what its metadata says."
+    ],
+    related: ["c-metadata", "gov-definition", "gov-approve"]
+},
+{
+    id: "gov-approve",
+    area: "Data quality & governance",
+    title: "Who approves changes",
+    question: "Who approves changes?",
+    summary: "There is no separate approval step for edits. Changes are controlled up front by roles and collection ownership, and each collection's Data Custodian is responsible for it.",
+    keywords: ["approve", "approval", "approves", "sign off", "review", "governance", "workflow", "custodian", "responsible"],
+    synonyms: ["who signs off", "is there an approval workflow", "do changes need approval", "who reviews changes", "who is responsible"],
+    steps: [
+        "Edits aren't queued for approval. When someone with edit access saves, the change takes effect straight away.",
+        "Control comes from who is allowed to edit: your role sets what you can do overall, and each collection's ownership says exactly who can change it.",
+        "The Data Custodian is responsible for their collection. They, their co-custodians and the editors they choose can change it, and they decide who those editors are.",
+        "A collection with no custodian is read-only for everyone except Admins, so nothing changes without someone being responsible.",
+        "The one formal approval is ownership: when someone requests to become a collection's custodian, an Admin approves or declines it.",
+        "Admins assign roles and can change anything."
+    ],
+    who: "Everyone. Custodians and Admins carry the responsibility.",
+    tips: [
+        "If your team wants changes reviewed, agree it as a working practice: for example, editors raise changes with the custodian before saving.",
+        "Watch a collection's items to be told when they change."
+    ],
+    related: ["c-custodian", "ownership", "ownership-requests", "roles"]
+},
+{
+    id: "gov-tracking",
+    area: "Data quality & governance",
+    title: "How changes are tracked",
+    question: "How are changes tracked?",
+    summary: "Data element versions carry From and To dates, watched items tell you when something changes, and ownership changes are recorded with who approved them and when.",
+    keywords: ["tracked", "tracking", "history", "versions", "audit", "change log", "dates", "from date", "to date", "who changed"],
+    synonyms: ["change history", "who changed this", "when was this changed", "audit trail", "track changes", "see previous versions", "how are changes tracked"],
+    steps: [
+        "Data element versions: Save New Version keeps the old version and starts a new one from today, so each version has its own From and To dates.",
+        "Save corrects the current version in place. Use it for small fixes; it doesn't keep the old wording.",
+        "When you change permitted values, a warning reminds you to save as a new version and check the dates.",
+        "Watching: watch an item and the subscriptions panel shows when it changed, so you can review it.",
+        "Ownership: the Ownership panel shows who approved the current custodian and when, and ownership changes and refused edits are recorded in an audit log.",
+        "Establishment saves, creates and deletes are recorded in the same audit log, and deleted establishment records are kept aside rather than destroyed.",
+        "Release changes to the app itself are in the patch notes."
+    ],
+    who: "Everyone can see versions and watch items. The audit log is for Admins.",
+    tips: [
+        "Data element edits don't show who saved them. If you need that, agree to note the reason in the element's Notes or use Save New Version.",
+        "Deleted data elements can be brought back from Deleted Items."
+    ],
+    related: ["de-versions", "watch-subscriptions", "ownership", "task-restore"]
+},
+{
+    id: "gov-definition",
+    area: "Data quality & governance",
+    title: "Writing a good data element definition",
+    question: "What makes a good data element definition?",
+    summary: "A good definition says clearly and briefly what the data element is, in plain words, without explaining how to collect it; the other fields hold the rest.",
+    keywords: ["good definition", "definition", "write", "writing", "best practice", "guide for use", "examples", "notes", "permitted values"],
+    synonyms: ["how to write a definition", "definition guidelines", "definition tips", "good metadata", "best practice for definitions"],
+    steps: [
+        "Say what it is, not how it's used: “The date the patient was admitted to hospital”, not “Enter the date from the admission form”.",
+        "Keep it to one concept, in a sentence or two, in plain language. Spell out abbreviations.",
+        "Don't define a term with itself (“Admission date: the date of admission”).",
+        "Be specific enough to tell it apart from similar elements, such as admission date versus referral date.",
+        "Put how to collect or use it in Guide for use, sample values in Examples, and anything else in Notes.",
+        "Fill in the structured fields too: data type, format (for example DD/MM/YYYY), size, whether it's mandatory, and permitted values with a code and a description for each.",
+        "When the meaning or the permitted values change, use Save New Version so the history is kept."
+    ],
+    who: "Anyone who writes or reviews data elements.",
+    tips: [
+        "Reuse the wording of an existing Metadata Lookup term where one applies, so definitions stay consistent.",
+        "Ask the collection's Data Custodian if you're unsure how a field should be defined."
+    ],
+    related: ["task-new-element", "de-open", "gov-quality", "lookup"]
+}
+);
+
+/* ============================== Getting the app ============================== */
+window.TOPICS.push(
+{
+    id: "app-install",
+    area: "Getting the app",
+    title: "Getting the Metadata Repository app",
+    question: "How do I get or install the Metadata Repository?",
+    summary: "The Metadata Repository is only available to IPG at the moment, until the project matures further and is housed in an environment where it can be distributed to DIS and APR.",
+    keywords: ["install", "download", "get the app", "installer", "set up", "access the app", "get a copy", "windows"],
+    synonyms: ["how do i install it", "where do i download it", "how do i get the app", "access the app", "get a copy", "set it up on my pc", "download the app", "install the metadata repository"],
+    steps: [
+        "The Metadata Repository is only available to IPG at the moment, until the project matures further and is housed in an environment where it can be distributed to DIS and APR.",
+        "It is a Windows desktop app. Within IPG, it is installed on your PC once and opens from your Windows login, with nothing extra to sign in to.",
+        "It needs your PC to reach the shared repository. If it can't, it says it can't reach the metadata repository.",
+        "Updates arrive with each release: the app checks when it starts and installs a new release automatically, then the Patch Notes panel on Home shows what changed.",
+        "Once installed, you get the User role until an Admin gives you another."
+    ],
+    who: "IPG staff, for now.",
+    tips: [
+        "If you're in IPG and don't have it yet, ask an Admin of the Metadata Repository to get you set up."
+    ],
+    related: ["app-other-teams", "patch-notes", "roles", "task-access"]
+},
+{
+    id: "app-other-teams",
+    area: "Getting the app",
+    title: "Using the Metadata Repository in other teams",
+    question: "Can other teams use it?",
+    summary: "The Metadata Repository is only available to IPG at the moment, until the project matures further and is housed in an environment where it can be distributed to DIS and APR.",
+    keywords: ["other teams", "roll out", "distribute", "availability", "who can get it", "other areas", "expand"],
+    synonyms: ["can other teams use it", "can my team use it", "roll out", "distribute", "is it available to everyone", "when will it be available"],
+    steps: [
+        "The Metadata Repository is only available to IPG at the moment, until the project matures further and is housed in an environment where it can be distributed to DIS and APR.",
+        "Until then, people outside IPG can't install it.",
+        "When it is distributed further, updates will continue to arrive with each release, so everyone stays on the same version.",
+        "The guide you are reading is public and describes how the app works, so other teams can see what it does in the meantime."
+    ],
+    who: "IPG staff, for now.",
+    tips: ["There's no date for wider distribution yet."],
+    related: ["app-install", "new-in-progress"]
 }
 );

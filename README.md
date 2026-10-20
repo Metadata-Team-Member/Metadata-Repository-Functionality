@@ -13,8 +13,8 @@ tips, and (for technical topics) what is under the hood.
   storage, roles, releases). Technical topics explain concepts, technologies and patterns,
   without internal locations, names or code.
 
-Current content: **guide v1.4.0, written for Metadata Repository app release 1.2.9**
-(90 topics: 54 user topics, 35 technical topics and 1 release-notes entry). The version is recorded here only; the page has no footer.
+Current content: **guide v1.5.0, written for Metadata Repository app release 1.2.9**
+(106 topics: 70 user topics, 35 technical topics and 1 release-notes entry). The version is recorded here only; the page has no footer.
 
 ## How to use it
 
@@ -57,7 +57,7 @@ from a folder from fetching data files, but they allow a script file.
 
 ## Adding or updating a topic
 
-User topics are in `data/topics.js` (including the Concepts, Everyday tasks, Troubleshooting and What's new areas) and technical topics in `data/topics-technical.js`. Topics are added in groups with `window.TOPICS.push( ... );`,
+User topics are in `data/topics.js` (including the Concepts, Data quality & governance, Everyday tasks, Getting the app, Troubleshooting and What's new areas) and technical topics in `data/topics-technical.js`. Topics are added in groups with `window.TOPICS.push( ... );`,
 one group per area. To add a topic, copy an existing one in the right group and change it:
 
 ```js
@@ -124,6 +124,7 @@ the date it was last checked. It is not shown on the page; update it alongside t
 - Base every statement on what the current Metadata Repository app release actually does. Check the app or its code.
 - **Leave out anything sensitive:** network or share paths, server or machine names, web addresses,
   user names or emails, file names, class or command names, licence details and code.
+- Team acronyms appear only in the two Getting the app topics, exactly as given, and are never expanded.
 - Leave out Easter eggs entirely. The Command Centre gets one line only (in the architecture overview,
   saying an admin area exists) and no detail. Developer-only tools are not covered in user topics;
   technical topics mention what the Developer role adds at a high level only.
