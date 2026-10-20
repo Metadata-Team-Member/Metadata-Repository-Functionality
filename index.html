@@ -14,6 +14,10 @@
             <input id="ask-input" type="search" placeholder="Ask how something works, e.g. “How do establishment filters work?”" spellcheck="false">
             <button type="submit" class="btn-primary">Ask</button>
         </form>
+        <div class="audience" role="group" aria-label="Who is this for?" title="Technical favours developer topics when ranking answers">
+            <button type="button" data-aud="everyone" aria-pressed="true">Everyone</button>
+            <button type="button" data-aud="technical" aria-pressed="false">Technical</button>
+        </div>
     </header>
 
     <div class="main">
@@ -36,10 +40,11 @@
         <span class="sep">·</span>
         <span id="footer-updated"></span>
         <span class="sep">·</span>
-        <span class="muted">Explains behaviour for users. Ask a Data Custodian or Admin if something looks different on your screen.</span>
+        <span class="muted">Explains behaviour for users and, under Technical, how it is built. Ask a Data Custodian or Admin if something looks different on your screen.</span>
     </footer>
 
     <script src="data/topics.js"></script>
+    <script src="data/topics-technical.js"></script>
     <script src="js/app.js"></script>
 </body>
 </html>

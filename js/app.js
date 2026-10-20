@@ -1,5 +1,6 @@
 /* Metadata Repository Functionality: question matching and rendering.
-   Content comes from data/topics.js (window.TOPICS, window.TOPIC_AREAS, window.GUIDE_META).
+   Content comes from data/topics.js (user topics, window.TOPIC_AREAS, window.GUIDE_META)
+   and data/topics-technical.js (technical topics, window.TECH_AREAS).
    No network requests: works from a shared folder or file://. */
 (function () {
     'use strict';
@@ -17,6 +18,16 @@
     var askForm = $('ask-form');
     var askInput = $('ask-input');
     var activeId = null;
+
+    // Audience: 'everyone' (default, all topics ranked equally) or 'technical' (technical topics favoured).
+    var TECH_AREAS = Array.isArray(window.TECH_AREAS) ? window.TECH_AREAS : [];
+    var AUD_KEY = 'mrf-guide-audience';
+    var TECH_BOOST = 1.4;
+    var audience = 'everyone';
+    try { if (localStorage.getItem(AUD_KEY) === 'technical') audience = 'technical'; } catch (e) { /* storage blocked */ }
+    var audMatch = /[?&]aud=(everyone|technical)/.exec((typeof location !== 'undefined' && location.search) || '');
+    if (audMatch) audience = audMatch[1];
+    function isTech(t) { return t && t.audience === 'technical'; }
 
     // ------------------------------------------------------------------ text helpers
     function esc(s) {
@@ -44,6 +55,11 @@
 
     function norm(s) {
         return String(s || '').toLowerCase()
+            .replace(/c\s*#|c\s+sharp/g, ' csharp ')
+            .replace(/(^|[^a-z0-9])\.net\b|\bdot\s+net\b/g, '$1 dotnet ')
+            .replace(/\bweb\s+view\s*2?\b/g, function (m) { return /2/.test(m) ? ' webview2 ' : ' webview '; })
+            .replace(/\bfront[\s-]+end\b/g, ' frontend ')
+            .replace(/\bback[\s-]+end\b/g, ' backend ')
             .replace(/[\u2018\u2019']/g, '')
             .replace(/[^a-z0-9+]+/g, ' ')
             .trim();
@@ -136,7 +152,9 @@
         var qToks = unique(tokens(query));
         if (!qToks.length) qToks = unique(tokens(query, true));
         return INDEX.map(function (e) {
-            return { t: e.t, score: scoreEntry(e, qToks, qNorm) };
+            var sc = scoreEntry(e, qToks, qNorm);
+            if (audience === 'technical' && isTech(e.t)) sc *= TECH_BOOST;
+            return { t: e.t, score: sc };
         }).filter(function (r) { return r.score > 0; })
           .sort(function (a, b) { return b.score - a.score; });
     }
@@ -158,13 +176,23 @@
         var html = '';
         var areas = AREAS.slice();
         TOPICS.forEach(function (t) { if (areas.indexOf(t.area) < 0) areas.push(t.area); });
-        areas.forEach(function (area) {
-            var items = shown.filter(function (t) { return t.area === area; });
-            if (!items.length) return;
-            html += '<div class="area-heading">' + esc(area) + '</div>';
-            items.forEach(function (t) {
-                html += '<button type="button" class="topic-link' + (t.id === activeId ? ' active' : '') +
-                    '" data-id="' + esc(t.id) + '">' + esc(t.title) + '</button>';
+        var userAreas = areas.filter(function (a) { return TECH_AREAS.indexOf(a) < 0; });
+        var techAreas = areas.filter(function (a) { return TECH_AREAS.indexOf(a) >= 0; });
+        var groups = audience === 'technical'
+            ? [{ label: 'Technical', areas: techAreas }, { label: 'Using MV64-2', areas: userAreas }]
+            : [{ label: 'Using MV64-2', areas: userAreas }, { label: 'Technical', areas: techAreas }];
+        groups.forEach(function (g) {
+            var any = shown.some(function (t) { return g.areas.indexOf(t.area) >= 0; });
+            if (!any) return;
+            if (techAreas.length) html += '<div class="group-divider">' + esc(g.label) + '</div>';
+            g.areas.forEach(function (area) {
+                var items = shown.filter(function (t) { return t.area === area; });
+                if (!items.length) return;
+                html += '<div class="area-heading">' + esc(area.replace(/^Tech:\s*/, '')) + '</div>';
+                items.forEach(function (t) {
+                    html += '<button type="button" class="topic-link' + (t.id === activeId ? ' active' : '') +
+                        '" data-id="' + esc(t.id) + '">' + esc(t.title) + '</button>';
+                });
             });
         });
         listEl.innerHTML = html || '<div class="empty-list">No topics match. Try a shorter word, or ask a question above.</div>';
@@ -200,11 +228,12 @@
 
     function topicHtml(t) {
         var related = (t.related || []).filter(function (id) { return byId[id]; });
-        return '<div class="area-chip">' + esc(t.area) + '</div>' +
+        return '<div class="area-chip' + (isTech(t) ? ' tech' : '') + '">' + esc(t.area) + '</div>' +
             '<h1 class="topic-title">' + esc(t.title) + '</h1>' +
             '<p class="topic-summary">' + esc(t.summary) + '</p>' +
             '<section class="card"><h3>How it works</h3>' + list(t.steps, 'steps', 'ol') + '</section>' +
             '<section class="card"><h3>Who can use it</h3><div class="who"><span class="role-pill">Role</span><div>' + esc(t.who) + '</div></div></section>' +
+            (t.under && t.under.length ? '<section class="card"><h3>Under the hood</h3>' + list(t.under, 'under', 'ul') + '</section>' : '') +
             (t.tips && t.tips.length ? '<section class="card"><h3>Tips</h3>' + list(t.tips, 'tips', 'ul') + '</section>' : '') +
             (related.length ? '<section class="card"><h3>Related</h3>' + chips(related) + '</section>' : '');
     }
@@ -280,6 +309,27 @@
         ask(askInput.value);
     });
 
+    // Audience toggle (subtle, in the header).
+    var audBtns = document.querySelectorAll ? document.querySelectorAll('[data-aud]') : [];
+    function syncAudience() {
+        for (var i = 0; i < audBtns.length; i++) {
+            var on = audBtns[i].getAttribute('data-aud') === audience;
+            audBtns[i].classList.toggle('on', on);
+            audBtns[i].setAttribute('aria-pressed', on ? 'true' : 'false');
+        }
+    }
+    function setAudience(a) {
+        audience = a === 'technical' ? 'technical' : 'everyone';
+        try { localStorage.setItem(AUD_KEY, audience); } catch (e) { /* storage blocked */ }
+        syncAudience();
+        renderList(filterEl.value);
+        markActive();
+    }
+    for (var ai = 0; ai < audBtns.length; ai++) {
+        audBtns[ai].addEventListener('click', function (e) { setAudience(e.currentTarget.getAttribute('data-aud')); });
+    }
+    syncAudience();
+
     filterEl.addEventListener('input', function () { renderList(filterEl.value); });
 
     document.addEventListener('keydown', function (e) {
@@ -290,7 +340,7 @@
     });
 
     // Small hook for testing in the browser console: __guide.rank('your question').
-    window.__guide = { rank: rank, ask: ask, show: showTopic };
+    window.__guide = { rank: rank, ask: ask, show: showTopic, audience: function (a) { if (a) setAudience(a); return audience; } };
 
     // ------------------------------------------------------------------ start
     $('footer-version').textContent = 'Guide v' + (META.version || '1.0.0');

@@ -302,6 +302,52 @@ input[type="search"]:focus {
 }
 .footer .sep { color: #444; }
 
+/* ---------- Audience toggle (subtle) ---------- */
+.audience {
+    display: inline-flex;
+    margin-left: auto;
+    border: 1px solid var(--border-3);
+    border-radius: 999px;
+    overflow: hidden;
+    background: var(--input);
+}
+.audience button {
+    background: transparent;
+    color: var(--muted);
+    border: none;
+    font: inherit;
+    font-size: 12px;
+    padding: 5px 12px;
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease;
+}
+.audience button:hover { color: var(--text); }
+.audience button.on { background: #1F3A40; color: var(--accent); }
+.audience button:focus-visible { outline: 1px solid var(--accent); outline-offset: -1px; }
+
+/* ---------- Technical topics ---------- */
+.group-divider {
+    margin: 14px 18px 0;
+    padding-top: 10px;
+    border-top: 1px solid var(--border-2);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    color: var(--text-strong);
+}
+.group-divider:first-child { margin-top: 4px; border-top: none; padding-top: 4px; }
+.area-chip.tech { color: #7FD8A8; border-color: #1E3A2C; background: #0E1A14; }
+.under { list-style: none; display: flex; flex-wrap: wrap; gap: 8px; }
+.under li {
+    font-size: 13px;
+    color: var(--soft);
+    background: var(--input);
+    border: 1px solid var(--border-3);
+    border-radius: 6px;
+    padding: 3px 10px;
+}
+
 /* ---------- Narrow windows ---------- */
 @media (max-width: 760px) {
     body { overflow: auto; }
@@ -309,6 +355,7 @@ input[type="search"]:focus {
     .sidebar { width: auto; flex: 0 0 auto; max-height: 40vh; border-right: none; border-bottom: 1px solid var(--border); }
     .panel { padding: 20px; }
     .top-bar { padding: 10px 16px; }
+    .audience { margin-left: 0; }
 }
 
 @media print {

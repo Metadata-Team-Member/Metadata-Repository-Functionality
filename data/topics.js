@@ -4,12 +4,14 @@
    See README.md for the field list and how to add a topic. */
 
 window.GUIDE_META = {
-    version: "1.0.0",
+    version: "1.1.0",
     mv64Version: "1.2.9",
     updated: "20 Oct 2026",
     suggestions: ["home-navigation", "est-filters", "de-versions", "dict-export", "roles", "ownership", "offline-mode", "metabot", "saving"],
     exampleQuestions: [
         "How do establishment filters work?",
+        "What is it built in?",
+        "How does the toolbar work?",
         "How does Save New Version work?",
         "How do I get edit access to a collection?",
         "Why can't I edit this?",
