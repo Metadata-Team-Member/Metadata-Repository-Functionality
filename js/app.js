@@ -184,8 +184,9 @@
         return true;
     }
 
-    function showMessage(text) {
-        answerEl.innerHTML = '<p class="quiet">' + esc(text) + '</p>';
+    function showMessage(text, withHelpLink) {
+        answerEl.innerHTML = '<p class="quiet">' + esc(text) +
+            (withHelpLink ? ', or <button type="button" class="link-btn open-help">see all questions</button>' : '') + '</p>';
         document.body.classList.add('has-answer');
     }
 
@@ -252,7 +253,7 @@
         var ranked = rank(question);
         var best = ranked.length && ranked[0].score >= MIN_SCORE ? ranked[0].t : null;
         if (best) showTopic(best.id);
-        else showMessage('No match \u2014 try rephrasing.');
+        else showMessage('No match \u2014 try rephrasing', true);
         if (!opts.noUrl) setUrl(question, best ? best.id : '');
         return best ? best.id : null;
     }
@@ -399,11 +400,33 @@
         });
     }
 
-    // Help list: each question asks itself.
+    // Open the help list as if "help" had been asked (so ×, Escape and ?q=help all behave the same).
+    function openHelp() {
+        closeSuggest();
+        askInput.value = 'help';
+        syncClear();
+        showHelp();
+        setUrl('help', '');
+        window.scrollTo(0, 0);
+        try { askInput.focus({ preventScroll: true }); } catch (e) { askInput.focus(); }
+    }
+
+    // Help list: each question asks itself. No-match line: "see all questions" opens help.
     answerEl.addEventListener('click', function (e) {
-        var b = e.target.closest ? e.target.closest('.help-item') : null;
-        if (b) askTopic(b.getAttribute('data-id'));
+        if (!e.target.closest) return;
+        var b = e.target.closest('.help-item');
+        if (b) { askTopic(b.getAttribute('data-id')); return; }
+        if (e.target.closest('.open-help')) openHelp();
     });
+
+    // The "?" at the end of the subtitle is the help trigger.
+    var helpQ = document.querySelector ? document.querySelector('.help-q') : null;
+    if (helpQ) {
+        helpQ.addEventListener('click', function (e) { e.preventDefault(); openHelp(); });
+        helpQ.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') { e.preventDefault(); openHelp(); }
+        });
+    }
 
     document.addEventListener('click', function (e) {
         if (isSuggestOpen() && !(e.target.closest && e.target.closest('.ask-wrap'))) closeSuggest();
@@ -417,6 +440,11 @@
     }
 
     document.addEventListener('keydown', function (e) {
+        // Escape anywhere else on the page also returns to the empty state.
+        if ((e.key === 'Escape' || e.key === 'Esc') && document.activeElement !== askInput) {
+            if (isSuggestOpen() || askInput.value || answerEl.innerHTML) { e.preventDefault(); resetPage(); }
+            return;
+        }
         if (e.key === '/' && document.activeElement !== askInput) {
             e.preventDefault();
             askInput.focus();
@@ -424,17 +452,8 @@
         }
     });
 
-    // Short placeholder on narrow screens so the help hint isn't cut off mid-word.
-    var fullPlaceholder = askInput.getAttribute('placeholder') || '';
-    function syncPlaceholder() {
-        var narrow = window.matchMedia && window.matchMedia('(max-width: 600px)').matches;
-        askInput.setAttribute('placeholder', narrow ? 'Ask, or type help' : fullPlaceholder);
-    }
-    syncPlaceholder();
-    if (window.addEventListener) window.addEventListener('resize', syncPlaceholder);
-
     // Console hook for checking matches: __guide.rank('your question').
-    window.__guide = { rank: rank, ask: ask, show: showTopic, clear: resetPage, suggest: suggestionsFor, askTopic: askTopic };
+    window.__guide = { rank: rank, ask: ask, show: showTopic, clear: resetPage, suggest: suggestionsFor, askTopic: askTopic, help: openHelp };
 
     // ------------------------------------------------------------------ start: empty until asked
     var hashId = decodeURIComponent((location.hash || '').replace(/^#/, ''));

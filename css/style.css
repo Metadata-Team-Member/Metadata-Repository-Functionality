@@ -62,6 +62,59 @@ body.has-answer .page { padding-top: 9vh; }
     font-weight: 400;
 }
 
+/* ---------- The "?" help trigger ---------- */
+.help-q {
+    position: relative;
+    display: inline-block;
+    padding: 0 4px;
+    margin: 0 -4px 0 -3px;
+    border-radius: 4px;
+    color: #A9A9A9;
+    cursor: pointer;
+    outline: none;
+    animation: help-glow 1.1s ease-in-out 1.5s 2;
+    transition: color 0.2s ease, text-shadow 0.2s ease;
+}
+.help-q:hover, .help-q:focus {
+    color: var(--green-soft);
+    text-shadow: 0 0 10px rgba(0, 91, 56, 0.9);
+}
+.help-q:focus-visible { box-shadow: 0 0 0 1px var(--green); }
+@keyframes help-glow {
+    0%, 100% { color: #A9A9A9; text-shadow: none; }
+    50% { color: var(--green-soft); text-shadow: 0 0 6px var(--green), 0 0 16px rgba(0, 91, 56, 0.9); }
+}
+.help-tip {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 50%;
+    transform: translate(-50%, -3px);
+    white-space: nowrap;
+    font-size: 0.8rem;
+    color: var(--soft);
+    background: var(--card);
+    border: 1px solid var(--border-2);
+    border-radius: 8px;
+    padding: 5px 11px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.15s ease, transform 0.15s ease, visibility 0s linear 0.15s;
+    z-index: 20;
+    text-shadow: none;
+}
+.help-q:hover .help-tip, .help-q:focus .help-tip {
+    opacity: 1;
+    visibility: visible;
+    transform: translate(-50%, 0);
+    transition: opacity 0.15s ease, transform 0.15s ease, visibility 0s;
+}
+@media (prefers-reduced-motion: reduce) {
+    .help-q { animation: none; transition: none; }
+    .help-tip { transition: none; }
+}
+
 /* ---------- Question input ---------- */
 .ask {
     display: flex;
@@ -195,6 +248,19 @@ body.has-answer .page { padding-top: 9vh; }
 }
 .help-item:hover { color: var(--strong); background: #1C1C1C; }
 .help-item:focus-visible { outline: 1px solid var(--green-soft); }
+
+.link-btn {
+    background: none;
+    border: none;
+    padding: 0;
+    font: inherit;
+    color: var(--soft);
+    text-decoration: underline;
+    text-decoration-color: rgba(63, 191, 138, 0.5);
+    text-underline-offset: 3px;
+    cursor: pointer;
+}
+.link-btn:hover, .link-btn:focus-visible { color: var(--green-soft); outline: none; }
 
 /* ---------- Answer ---------- */
 .answer { margin-top: 36px; }

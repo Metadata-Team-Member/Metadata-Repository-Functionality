@@ -13,7 +13,7 @@ tips, and (for technical topics) what is under the hood.
   storage, roles, releases). Technical topics explain concepts, technologies and patterns,
   without internal locations, names or code.
 
-Current content: **guide v1.3.0, written for Metadata Repository app release 1.2.9**
+Current content: **guide v1.3.1, written for Metadata Repository app release 1.2.9**
 (43 user topics, 31 technical topics). The version is recorded here only; the page has no footer.
 
 ## How to use it
@@ -23,9 +23,13 @@ Current content: **guide v1.3.0, written for Metadata Repository app release 1.2
   with the typed words subtly highlighted. Click one, or use Up/Down and Enter, to ask it straight away.
   Enter with nothing highlighted asks what you typed. Escape closes the list first; a second Escape clears.
 - **Help:** ask `help` (or `?`) to list every question, grouped by area (user areas first, then technical).
-  Click any question to see its answer. The placeholder carries a quiet hint about this.
+  Click any question to see its answer.
+- The **?** at the end of the subtitle is the help hint: it glows softly twice shortly after the page
+  opens (not if the system asks for reduced motion), shows "See all questions — or type help" on hover
+  or focus, and opens the help list on click, Enter or Space. A no-match answer also offers
+  "see all questions".
 - **Ask a question** and press Enter or **Ask**. The best-matching topic appears below the box.
-  If nothing matches well enough, you see a single line: "No match — try rephrasing."
+  If nothing matches well enough, you see a single line: "No match — try rephrasing, or see all questions".
 - Press `/` anywhere to jump to the question box.
 - Click **×** (shown only when there is text, set well apart from Ask) or press **Esc** in the box
   to clear the question and the answer (or help list) and return to the empty page with a clean link.
