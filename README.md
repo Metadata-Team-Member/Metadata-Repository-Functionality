@@ -13,8 +13,8 @@ tips, and (for technical topics) what is under the hood.
   storage, roles, releases). Technical topics explain concepts, technologies and patterns,
   without internal locations, names or code.
 
-Current content: **guide v1.5.0, written for Metadata Repository app release 1.2.9**
-(106 topics: 70 user topics, 35 technical topics and 1 release-notes entry). The version is recorded here only; the page has no footer.
+Current content: **guide v1.6.0, written for Metadata Repository app release 1.3.1**
+(116 topics: 78 user topics, 35 technical topics and 3 release-notes entries). The version is recorded here only; the page has no footer.
 
 ## How to use it
 
@@ -57,7 +57,7 @@ from a folder from fetching data files, but they allow a script file.
 
 ## Adding or updating a topic
 
-User topics are in `data/topics.js` (including the Concepts, Data quality & governance, Everyday tasks, Getting the app, Troubleshooting and What's new areas) and technical topics in `data/topics-technical.js`. Topics are added in groups with `window.TOPICS.push( ... );`,
+User topics are in `data/topics.js` (including the Reference Data, Metabot Insight, Concepts, Data quality & governance, Everyday tasks, Getting the app, Troubleshooting and What's new areas) and technical topics in `data/topics-technical.js`. Topics are added in groups with `window.TOPICS.push( ... );`,
 one group per area. To add a topic, copy an existing one in the right group and change it:
 
 ```js

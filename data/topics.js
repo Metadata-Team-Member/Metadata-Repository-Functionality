@@ -4,8 +4,8 @@
    See README.md for the field list and how to add a topic. */
 
 window.GUIDE_META = {
-    appRelease: "1.2.9",   // the app release this content describes (not shown on the page)
-    updated: "20 Oct 2026"
+    appRelease: "1.3.1",   // the app release this content describes (not shown on the page)
+    updated: "22 Oct 2026"
 };
 
 window.TOPIC_AREAS = [
@@ -15,6 +15,7 @@ window.TOPIC_AREAS = [
     "Getting the app",
     "Getting started",
     "Establishments",
+    "Reference Data",
     "Data Elements",
     "Data Models",
     "Dictionaries / Collections",
@@ -24,6 +25,7 @@ window.TOPIC_AREAS = [
     "Permissions / roles",
     "Offline mode",
     "Phone apps",
+    "Metabot Insight",
     "Mail and Feedback",
     "Saving / unsaved changes / Ctrl+S",
     "Export options",
@@ -1286,12 +1288,12 @@ window.TOPICS.push(
     area: "What's new",
     title: "What's in progress",
     question: "What's planned next?",
-    summary: "Two areas already appear on Home but aren't active yet: Reference Data and Ward Mapping. They're in progress; there are no dates.",
-    keywords: ["planned", "roadmap", "next", "coming", "future", "in progress", "reference data", "ward mapping"],
+    summary: "Ward Mapping already appears on Home but isn't active yet. It's in progress; there are no dates.",
+    keywords: ["planned", "roadmap", "next", "coming", "future", "in progress", "ward mapping"],
     synonyms: ["what's planned next", "what is coming", "upcoming features", "what's next", "future plans"],
     steps: [
-        "Reference Data: shows in Home's Data menu but doesn't open anything yet. Reference Data collections are already recognised for ownership and dictionaries.",
         "Ward Mapping: shows in Home's Data menu but isn't active yet.",
+        "Reference Data is now live: ask “How do I browse Reference Data?”.",
         "Everything else in the menus is live.",
         "Each release's changes appear in the patch notes on Home. Ask “What changed in the latest release?” for the newest one."
     ],
@@ -1673,5 +1675,174 @@ window.TOPICS.push(
     who: "IPG staff, for now.",
     tips: ["There's no date for wider distribution yet."],
     related: ["app-install", "new-in-progress"]
+}
+);
+
+/* ============================== Reference Data ============================== */
+window.TOPICS.push(
+{
+    id: "rd-browse",
+    area: "Reference Data",
+    title: "Browsing Reference Data",
+    question: "How do I browse Reference Data?",
+    summary: "Library > Reference Data lists the reference data folders; open one to see each of its files as a card you can search and expand.",
+    keywords: ["reference data", "reference", "code list", "code lists", "folder", "folders", "cards"],
+    synonyms: ["open reference data", "view reference data", "look at reference data", "religion list", "language list", "reference tables"],
+    steps: [
+        "Open Library > Reference Data (or Reference Data in Home's Data menu). A landing page lists the reference data folders.",
+        "Pick a folder. Each file in it appears as a card, in the same style as the Establishments cards.",
+        "Use the search box in the title bar to find a file by name or by anything inside it.",
+        "Click a card to expand it and see the rest of its fields. Coded fields show the code with its plain-English description.",
+        "Use the Folders button to show or hide the folder list, and File > Print / Save as PDF or Copy selected file as JSON to take a copy."
+    ],
+    who: "Everyone can browse. Editing, adding and deleting depend on your role.",
+    tips: [
+        "Cards load as you scroll, so large folders stay quick.",
+        "File > Reload folder picks up changes someone else has just saved."
+    ],
+    related: ["rd-edit", "rd-template", "est-browse"]
+},
+{
+    id: "rd-edit",
+    area: "Reference Data",
+    title: "Editing, adding and deleting Reference Data",
+    question: "How do I edit, add or delete a Reference Data file?",
+    summary: "Select a card, then use Edit to change it or the File menu to add or delete files; what you see depends on your role.",
+    keywords: ["edit reference data", "new reference data", "delete reference data", "add reference data", "change reference data"],
+    synonyms: ["update reference data", "remove reference data", "create reference data", "save reference data"],
+    steps: [
+        "Open the folder and select the card you want.",
+        "Click Edit in the title bar. The card turns into a text editor showing the file's contents.",
+        "Make your change and choose File > Save. If someone else saved the same file since you opened it, you're told rather than overwriting their work.",
+        "To add a file, choose File > New and give it a name. A draft card appears at the top for you to fill in.",
+        "To remove a file, select it and choose File > Delete. Deleted files are kept aside, so they can be restored."
+    ],
+    who: "Editors and above can edit and save. Admins can also add and delete files. Nobody can change Reference Data in offline mode.",
+    tips: [
+        "Finish or cancel an edit before adding, deleting or reloading.",
+        "If you leave with unsaved changes, you're asked first."
+    ],
+    related: ["rd-browse", "roles", "offline-mode", "saving"]
+},
+{
+    id: "rd-template",
+    area: "Reference Data",
+    title: "Reference Data card templates",
+    question: "How do Reference Data card templates work?",
+    summary: "Each folder has a card template that decides which fields show as the card title, subtitle and main fields, and which appear only when expanded.",
+    keywords: ["template", "card template", "templates", "layout", "build", "build menu", "reset to auto", "reload template"],
+    synonyms: ["change the card layout", "card layout", "which fields show", "reorder fields", "rename a field label"],
+    steps: [
+        "Open a Reference Data folder and choose Build > Card template.",
+        "A side panel lists every field found in the folder's files. For each one, choose its role: Title, Subtitle, Core (always shown), Expanded (shown when the card is opened), Other or Skip.",
+        "Reorder fields with the up and down buttons or by dragging, change the label people see, and link a field to a lookup so its codes show descriptions.",
+        "Changes preview on the cards straight away but aren't kept until you click Save.",
+        "Reset to auto rebuilds a sensible starting template from the folder's files. Reload template throws away unsaved changes and reads the saved one again."
+    ],
+    who: "Everyone can open the panel to look. Editors and above can save a template (not in offline mode).",
+    tips: [
+        "A folder without a template gets one made automatically the first time it's opened, so cards always have a layout.",
+        "If a template has a problem, the folder still opens with a plain layout and a short message explains what went wrong."
+    ],
+    related: ["rd-browse", "rd-edit", "est-mapped"]
+}
+);
+
+/* ============================== Metabot Insight ============================== */
+window.TOPICS.push(
+{
+    id: "insight",
+    area: "Metabot Insight",
+    title: "Metabot Insight mode",
+    question: "What is Metabot Insight mode?",
+    summary: "Insight mode has Metabot quietly check the page you're on for data-quality problems and point them out in a small speech bubble.",
+    keywords: ["insight", "insight mode", "insights", "data quality check", "check this page", "metabot face"],
+    synonyms: ["turn on insight", "switch on insight", "metabot checks my data", "data quality hints", "speech bubble", "the little face"],
+    steps: [
+        "Click the Insight button in the top bar, next to the phone icon. It stays on as you move between pages until you close the app.",
+        "A small Metabot face appears in the bottom-right corner. When a page loads, or you select an element or card, it checks what you're looking at.",
+        "Quick checks run on your computer first and show straight away: missing required fields, codes that aren't in the lookups, out-of-date versions, formatting and consistency, and duplicates in reference data.",
+        "Metabot then adds a short, plain-English summary. The face's colour shows how things look: fine, worth a look, a warning or an issue.",
+        "Click a field name in the bubble to jump to that field on the page. Click More for the full explanation in the Metabot app."
+    ],
+    who: "Everyone who uses Metabot with an AI service turned on and connected. If it isn't connected, the button explains why and a click checks the connection.",
+    tips: [
+        "The face follows your pointer, glances at the field it's talking about, and dozes off after 30 seconds of no activity. Any key or click wakes it.",
+        "You can also ask Metabot in chat to turn Insight mode on or off.",
+        "If you prefer less movement, turn on reduced motion in Windows and the face stays still."
+    ],
+    related: ["insight-fixes", "insight-collection", "insight-settings", "insight-privacy", "metabot"]
+},
+{
+    id: "insight-fixes",
+    area: "Metabot Insight",
+    title: "Fixing what Insight finds",
+    question: "How do I fix something Insight finds?",
+    summary: "Many findings come with a one-click fix that fills the field in for you, ready for you to check and save.",
+    keywords: ["fix", "one-click fix", "undo", "draft value", "trim spaces", "valid code", "previous insights", "don't show again", "thumbs"],
+    synonyms: ["apply a fix", "correct the field", "hide a finding", "dismiss a finding", "insight history", "helpful", "not helpful"],
+    steps: [
+        "Where a fix is possible, the finding shows a button such as Trim spaces, Replace spaces with _, Use a corrected postcode, Choose a valid code or Draft value.",
+        "Click it. The page switches to its normal edit mode (cards open their edit form first) and the field is filled in. Nothing is saved until you save it yourself.",
+        "Click Undo to put back the previous value. The checks re-run on your edited values.",
+        "Draft value asks Metabot to suggest wording for a field, based only on what's already saved.",
+        "Open Previous insights to see the last ten findings for that item. Use the thumbs up or down to say whether a finding helped, or Don't show again to hide that check for that item."
+    ],
+    who: "Fix buttons appear only if you're allowed to edit that item, and never on the Data Warehouse page or in offline mode. Everyone can see findings.",
+    tips: ["History, feedback and hidden checks are stored on your computer only."],
+    related: ["insight", "saving", "ownership"]
+},
+{
+    id: "insight-collection",
+    area: "Metabot Insight",
+    title: "Checking a whole collection or comparing versions",
+    question: "How do I check a whole collection with Insight?",
+    summary: "Check collection runs the quick checks over every item in what you have open; Compare versions shows what changed between saved versions.",
+    keywords: ["check collection", "collection check", "compare versions", "health check", "whole collection", "all items", "version comparison"],
+    synonyms: ["check everything", "check all elements", "scan the collection", "what changed between versions", "difference between versions"],
+    steps: [
+        "With Insight on, open a data element collection, a dictionary, the establishment list or a Reference Data folder.",
+        "Choose Check collection in the Insight bubble. Every item is checked on your computer, with a progress bar and a Cancel option.",
+        "The result counts findings by check and by severity and lists the items to look at first. Click one to open it.",
+        "You can ask Metabot for a short overview. It receives only the counts, the check names and the field names, never your values.",
+        "For a data element or a Reference Data file, choose Compare versions to see field-by-field differences against the previous saved version, and optionally ask Metabot to explain them."
+    ],
+    who: "Everyone with Insight mode available. The checks only read; nothing is changed.",
+    tips: ["Very large collections are checked up to the first 2,000 items."],
+    related: ["insight", "de-versions", "collections"]
+},
+{
+    id: "insight-settings",
+    area: "Metabot Insight",
+    title: "Insight settings and daily limit",
+    question: "How do I change when Insight runs?",
+    summary: "Right-click the Insight button, or choose Settings in the bubble, to pick when Insight asks Metabot and how many times a day.",
+    keywords: ["insight settings", "daily limit", "limit", "how often", "chattiness", "budget", "page load", "clicks"],
+    synonyms: ["make insight quieter", "insight too chatty", "stop insight asking", "only when issues", "run once anyway"],
+    steps: [
+        "Right-click the Insight button, or click Settings in the Insight bubble.",
+        "Choose when Metabot is asked: on page load only, on page load and clicks (the default), or only when the quick checks find something.",
+        "Set a daily limit for Metabot requests (100 by default; 0 means no limit). The panel shows how many you've used today.",
+        "When the limit is reached, the quick checks still run, and you can choose Run once anyway for a single extra request."
+    ],
+    who: "Everyone. Settings are kept on your computer.",
+    related: ["insight", "insight-privacy"]
+},
+{
+    id: "insight-privacy",
+    area: "Metabot Insight",
+    title: "What Insight sends to the AI service",
+    question: "What does Insight send to the AI service?",
+    summary: "Insight sends the same limited page context as Metabot chat, and never warehouse rows, images or anything you haven't saved.",
+    keywords: ["insight privacy", "privacy", "what is sent", "send", "data sent", "safe", "secure"],
+    synonyms: ["is insight safe", "does insight send my data", "what does metabot see", "unsaved values"],
+    steps: [
+        "The quick checks run entirely on your computer. If they already cover every field, Metabot isn't asked at all.",
+        "Otherwise Metabot gets the page context plus the quick-check results, using the same protections as chat.",
+        "Data Warehouse result rows, images and text you haven't saved are never sent.",
+        "A collection overview sends only counts, check names and field names. Comparing versions sends only the saved values that differ."
+    ],
+    who: "Everyone.",
+    related: ["insight", "metabot"]
 }
 );

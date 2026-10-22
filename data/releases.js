@@ -5,6 +5,31 @@
 
 window.RELEASES = [
     {
+        version: "1.3.1",
+        summary: "Release 1.3.1 adds card templates for Reference Data, so each folder's cards show the right fields in the right order.",
+        changes: [
+            "Reference Data: each folder has a card template that sets the card title, subtitle, main fields and expanded fields, with lookups showing code descriptions.",
+            "Reference Data: a folder without a template gets one made automatically when it's first opened.",
+            "Reference Data: a new Build menu with a card template editor (field roles, order, labels and lookups, with a live preview), Reset to auto and Reload template.",
+            "Reference Data: template problems show a short message and the folder still opens with a plain layout.",
+            "Metabot Insight: two extra checks for Reference Data, for field names containing spaces and mixed date formats in one file."
+        ]
+    },
+    {
+        version: "1.3.0",
+        summary: "Release 1.3.0 opens Library > Reference Data and adds Metabot Insight mode, which checks the page you're on for data-quality problems.",
+        changes: [
+            "Library > Reference Data: a folder landing page and a searchable card view for each reference data folder.",
+            "Reference Data: Editors and above can edit and save files; Admins can also add and delete them.",
+            "Metabot Insight mode: an Insight button in the top bar turns on a small Metabot face that checks each page and explains what it finds in a speech bubble.",
+            "Insight: quick checks run on your computer first, with colour-coded severity and field names you can click to jump to the field.",
+            "Insight: one-click fixes with Undo, Draft value, previous insights, thumbs up or down, and Don't show again.",
+            "Insight: Check collection for a whole collection, dictionary, establishment list or Reference Data folder, and Compare versions for saved versions.",
+            "Insight: settings for when Metabot is asked and a daily request limit.",
+            "Insight: the face shows expressions, follows the pointer and dozes off after a short idle time."
+        ]
+    },
+    {
         version: "1.2.9",
         summary: "Release 1.2.9 is mostly about Establishments: a filters sidebar with counts, plain-English code descriptions and export of the listed establishments. It also adds the Mapping File export and Metabot network checks.",
         changes: [
