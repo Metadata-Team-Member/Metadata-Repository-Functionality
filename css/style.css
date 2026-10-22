@@ -76,13 +76,13 @@ body.has-answer .page { padding-top: 9vh; }
     transition: color 0.2s ease, text-shadow 0.2s ease;
 }
 .help-q:hover, .help-q:focus {
-    color: var(--green-soft);
-    text-shadow: 0 0 10px rgba(0, 91, 56, 0.9);
+    color: #FFE600;
+    text-shadow: 0 0 6px rgba(255, 214, 0, 0.9), 0 0 16px rgba(255, 200, 0, 0.6);
 }
-.help-q:focus-visible { box-shadow: 0 0 0 1px var(--green); }
+.help-q:focus-visible { box-shadow: 0 0 0 1px #FFE600; }
 @keyframes help-glow {
     0%, 11%, 22%, 100% { color: #A9A9A9; text-shadow: none; }
-    5.5%, 16.5% { color: var(--green-soft); text-shadow: 0 0 6px var(--green), 0 0 16px rgba(0, 91, 56, 0.9); }
+    5.5%, 16.5% { color: #FFE600; text-shadow: 0 0 6px rgba(255, 214, 0, 0.95), 0 0 18px rgba(255, 200, 0, 0.7); }
 }
 /* Flashing pauses while typing, while suggestions, an answer or the help list show, and while the
    tab is hidden. Removing the animation and adding it back restarts the cycle (first flash 1.5 s later). */
