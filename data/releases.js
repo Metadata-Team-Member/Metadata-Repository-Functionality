@@ -5,6 +5,23 @@
 
 window.RELEASES = [
     {
+        version: "1.3.2",
+        summary: "Release 1.3.2 adds a review round for dictionaries (a commentable Review export and Dictionary Review Merge), easier dictionary editing, a new relationship diagram, safer Code List dates and Data > Reference Data.",
+        changes: [
+            "Dictionaries: File > Export > Review saves a draft copy with a DRAFT watermark and a Comments box beside each page, for reviewers to comment on in a web browser and email back.",
+            "Tools > Dictionary Review Merge: drop in all the commented copies to make one consolidated review copy for final comment and sign-off.",
+            "Dictionary edit mode: one formatting toolbar pinned under the save status bar, and a search box under each collection in Dictionary Contents.",
+            "Rich text: fixes for bullet lists and Tab, button highlighting, shortcuts and tooltips, heading toggles, undo and redo, and pasting from Word or the web with basic formatting.",
+            "Data Elements: click the CODE heading to sort permitted values.",
+            "Code List export: codes are matched across versions by code, and an anomalies report is saved when dates or codes look wrong.",
+            "Version dates: new elements start 1600-01-01 to 9999-01-01, Save New Version handles a second save on the same day, dates are always year-month-day, and saves warn about date changes that affect the Code List.",
+            "Data Models: the relationship diagram now shows tables as cards, with an expanded full-window view where you can pan, zoom and drag cards.",
+            "Data > Reference Data: maintain Reference Data lists and their records, edit their structure, and import from Library (Admins). Lists maintained there are read-only in Library > Reference Data.",
+            "Data pages: actions on the Establishment List and Reference Data pages now live in File and Edit menus.",
+            "Export file names use your local date."
+        ]
+    },
+    {
         version: "1.3.1",
         summary: "Release 1.3.1 adds card templates for Reference Data, so each folder's cards show the right fields in the right order.",
         changes: [

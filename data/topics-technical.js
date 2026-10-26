@@ -395,10 +395,12 @@ window.TOPICS.push(
     synonyms: ["how does the toolbar work", "text editor", "formatting buttons", "html editor", "rich text editor", "word processor"],
     steps: [
         "Where it appears: on data element rich-text fields (Definition, Guide for use, Examples and Notes), and on dictionary pages in edit mode (cover title, preamble, disclaimer, appendix, signature and element content). A couple of admin screens reuse it.",
-        "How it is built: the field is an HTML element with the browser's content-editable mode switched on. The toolbar is created in script and placed directly above the field, in the dark theme.",
+        "How it is built: the field is an HTML element with the browser's content-editable mode switched on. The toolbar is created in script and placed directly above the field, in the dark theme. On the dictionary page a single shared toolbar is pinned under the save status bar instead, and acts on the rich field that last had focus.",
         "Buttons: Bold, Italic, Underline, Strikethrough, Clear formatting, text colour, Heading 1 to 3, Quote, numbered and bullet lists, indent and outdent, Insert link, and table tools (insert a table with chosen rows and columns, add or delete rows and columns, widen or narrow a column).",
         "What they apply to: the current selection or the paragraph the cursor is in. Most use the browser's built-in formatting commands. Lists and tables have custom code that keeps the markup valid (for example, no list inside a paragraph, no stray list items).",
-        "Behaviour: pasting is forced to plain text so outside styling can't sneak in; links open only with Ctrl+click; Tab moves between table cells and adds a new row from the last cell.",
+        "Behaviour: each field keeps its own saved selection, and toolbar buttons keep focus in the text, so actions land where the cursor was. Buttons show their active state, tooltips and keyboard shortcuts, headings toggle, and undo and redo cover table edits too.",
+        "Paste: content from Word or the web is cleaned down to basic formatting (Ctrl+Shift+V pastes plain text). Unsafe links are blocked, links can be edited and removed, and they open only with Ctrl+click.",
+        "Tab: indents and outdents in lists, inserts four spaces in text, and moves between table cells (adding a row from the last cell). Escape then Tab leaves the field.",
         "Every action raises an input event, so the unsaved-changes flag and Ctrl+S see toolbar edits the same as typing.",
         "Storage: on save, the field's HTML is cleaned of trailing empty lines and stored as an HTML string in the record's JSON. Older content in a previous rich-text format is turned into HTML when it is opened."
     ],
@@ -407,7 +409,7 @@ window.TOPICS.push(
         "Because content is stored as HTML, dictionaries and exports can show it with its formatting intact.",
         "Derivation logic uses a separate code editor, not this toolbar (see Code fields)."
     ],
-    under: ["contentEditable", "document.execCommand", "Selection and Range APIs", "Custom list and table normalisation", "Plain-text paste", "Synthetic input events"],
+    under: ["contentEditable", "document.execCommand", "Selection and Range APIs", "Custom list and table normalisation", "Paste sanitising", "Synthetic input events", "Per-field selection memory"],
     related: ["t-code-field", "t-dirty-ctrls", "t-editing-flow", "dict-edit"]
 },
 {

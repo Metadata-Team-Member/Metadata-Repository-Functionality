@@ -4,8 +4,8 @@
    See README.md for the field list and how to add a topic. */
 
 window.GUIDE_META = {
-    appRelease: "1.3.1",   // the app release this content describes (not shown on the page)
-    updated: "22 Oct 2026"
+    appRelease: "1.3.2",   // the app release this content describes (not shown on the page)
+    updated: "26 Oct 2026"
 };
 
 window.TOPIC_AREAS = [
@@ -49,7 +49,7 @@ window.TOPICS.push(
         "Hover over or click a menu at the top of the Home screen to open its panel of buttons.",
         "Library holds Dictionaries, Data Models and Establishments.",
         "Metadata holds Data Elements and Data Model Elements (the building blocks the other pages use).",
-        "Sources holds the Data Warehouse, Tools holds Compare CSV, and Data holds the Establishment List folders.",
+        "Sources holds the Data Warehouse, Tools holds Compare CSV and Dictionary Review Merge, and Data holds the Establishment List folders and the Reference Data lists.",
         "On every other page, the arrow button at the top left goes back one step and the house button returns to Home.",
         "The phone button at the top right opens the phone panel with Metabot, Mail, Feedback and the other phone apps."
     ],
@@ -205,20 +205,21 @@ window.TOPICS.push(
     title: "Establishment List folders",
     question: "What are Establishment List folders?",
     summary: "Data > Establishment List shows the folders that feed the Establishments page, each holding one part of every establishment's data.",
-    keywords: ["establishment list", "folder", "folders", "raw view", "form view", "edit structure", "property"],
+    keywords: ["establishment list", "folder", "folders", "raw view", "raw json", "form view", "edit structure", "property", "new establishment"],
     synonyms: ["source folders", "establishment data folders", "team folders", "add property", "structure"],
     steps: [
         "Open Data > Establishment List on Home. You see one card per folder. Type in the filter box to find a folder.",
         "Open a folder to see its establishments on the left. Use the search box to find one.",
-        "Pick an establishment to edit it in Form view, or switch to Raw view to see every value at once.",
-        "Click Save to write your changes. Ctrl+S also saves on this page.",
-        "Use + Add to add an establishment to the folder, or Delete to move one to the deleted area.",
-        "Edit structure lets you add, rename or remove a property across every record in the folder in one go. You see a preview first, and a backup is kept."
+        "Pick an establishment to edit it. Edit > Form and Edit > Raw JSON switch between the form and every value at once.",
+        "Choose File > Save (or Ctrl+S) to write your changes.",
+        "Use File > New establishment to add one to the folder, or File > Delete to move one to the deleted area. Admins create a new folder with File > New Folder on the folder list.",
+        "Edit > Edit structure lets you add, rename or remove a property across every record in the folder in one go. You see a preview first, and a backup is kept. Edit > Ownership shows who looks after the folder."
     ],
     who: "Editor and above can edit unowned folders. When a folder has a Data Custodian, only its custodians and editors (and Admins) can edit it. In the main establishments folder, adding, deleting and Edit structure are Admin only. Creating a new folder is Admin only.",
     tips: [
         "A banner at the top tells you whether the folder is owned, who looks after it, and offers Request ownership when you can.",
-        "The establishment code is locked everywhere so records stay linked across folders."
+        "The establishment code is locked everywhere so records stay linked across folders.",
+        "Menus only show what your role can use. If nothing is left for your role, the menu bar is hidden."
     ],
     related: ["est-edit", "ownership", "ownership-requests"]
 },
@@ -269,9 +270,10 @@ window.TOPICS.push(
     who: "Everyone can read. Editing needs edit access to that collection (its custodians and editors, or an Admin). See Collection ownership.",
     tips: [
         "Changing the title updates the name in the left panel straight away; it's kept when you save.",
-        "Read-only users still see File > Export."
+        "Read-only users still see File > Export.",
+        "Click the CODE heading in the permitted values table to sort the codes."
     ],
-    related: ["de-versions", "de-delete-restore", "de-export", "lookup", "ownership"]
+    related: ["de-versions", "de-delete-restore", "de-export", "de-sort-codes", "lookup", "ownership"]
 },
 {
     id: "de-versions",
@@ -286,14 +288,18 @@ window.TOPICS.push(
         "File > Save writes your changes into the current version. Use it for corrections, such as a typo.",
         "File > Save New Version adds a new version with your changes. It starts today and has an open-ended To date.",
         "The version that was current is closed off the day before today, so the two never overlap.",
-        "Save New Version only works after you have changed something, and not while you are still creating a brand-new element (save that normally first)."
+        "If the newest version already starts today, a second Save New Version on the same day offers “Update today's version” instead, so no version ends before it starts.",
+        "Save New Version is refused while the newest version starts in the future. Fix its From date first.",
+        "Save New Version only works after you have changed something, and not while you are still creating a brand-new element (save that normally first).",
+        "Dates are always shown and saved as year-month-day, whatever your computer's regional settings."
     ],
     who: "Anyone with edit access to the collection.",
     tips: [
         "Use Save New Version when the meaning or the permitted values really change, so reports for earlier periods stay accurate.",
-        "If you saved a new version by mistake, ask the collection's custodian for help rather than deleting the element."
+        "If you saved a new version by mistake, ask the collection's custodian for help rather than deleting the element.",
+        "Version dates also set the dates in the Code List export. See “Why am I warned about version dates when I save?”."
     ],
-    related: ["de-open", "saving", "de-delete-restore"]
+    related: ["de-open", "saving", "de-delete-restore", "de-version-dates"]
 },
 {
     id: "de-delete-restore",
@@ -330,15 +336,59 @@ window.TOPICS.push(
         "Data Element: exports the record you have open as JSON or CSV. (Fixed-width is shown as coming soon.)",
         "Element Specifications: exports the technical details of the open element (field name, data type, format, size, precision, requirement status) as JSON or CSV.",
         "Collection Specifications: the same kind of details for every element in the collection, as JSON or CSV.",
-        "Code List: a CSV of every code and description across the collection. Only rows with a field name, a code and a description are included.",
+        "Code List: a CSV of every code and description across the collection, with start and end dates taken from the element versions. Codes are matched across versions by the code itself, so reordering permitted values doesn't create false start or end dates. Only rows with a field name, a code and a description are included.",
+        "If anything about the dates or codes looks wrong, an anomalies report is saved next to the Code List, and the completion message says how many issues were found.",
         "Mapping File: builds the code-to-description list that the Establishments page uses, from the permitted values in this collection, and saves it into the repository."
     ],
     who: "Everyone can use the first four. Mapping File is Editor and above because it saves into the repository.",
     tips: [
         "If Code List says no rows were found, check that the permitted values have both a code and a description.",
-        "After updating permitted values that establishments use, run Mapping File so the Establishments page shows the new descriptions."
+        "After updating permitted values that establishments use, run Mapping File so the Establishments page shows the new descriptions.",
+        "Export file names use your local date."
     ],
     related: ["export-overview", "est-mapped", "de-open"]
+},
+{
+    id: "de-sort-codes",
+    area: "Data Elements",
+    title: "Sorting permitted values by code",
+    question: "How do I sort permitted values by code?",
+    summary: "Click the CODE heading in an element's permitted values table to put the codes in natural order.",
+    keywords: ["sort", "sort codes", "sort permitted values", "code heading", "order codes", "permitted values order"],
+    synonyms: ["put codes in order", "reorder codes", "arrange codes", "sort by code", "numeric order"],
+    steps: [
+        "Open a data element and scroll to its permitted values.",
+        "Click the CODE heading at the top of the table.",
+        "The codes are sorted in natural order: 1, 2, 10 rather than 1, 10, 2, then codes with letters, with blank codes last.",
+        "Save the element if you want to keep the new order."
+    ],
+    who: "Anyone with edit access to the collection.",
+    tips: [
+        "Changing the order doesn't affect Code List dates, because codes are matched by the code itself, not their position."
+    ],
+    related: ["de-open", "de-export"]
+},
+{
+    id: "de-version-dates",
+    area: "Data Elements",
+    title: "Version date checks when saving",
+    question: "Why am I warned about version dates when I save?",
+    summary: "The app checks an element's version dates when you save, because they also set the start and end dates in the Code List export.",
+    keywords: ["version dates", "date warning", "from date", "to date", "save anyway", "date check", "1600", "9999"],
+    synonyms: ["dates warning", "wrong dates", "half typed date", "blank date", "code list dates", "date error on save"],
+    steps: [
+        "A new element starts with one version running from 1600-01-01 to 9999-01-01, so it covers every period until you change it.",
+        "If the oldest From date or the newest To date is left blank, it is filled back in when you save.",
+        "A half-typed date is highlighted so you can finish it.",
+        "When a save would move the oldest From date, end the newest version by hand, change codes with a plain Save, or edit an older version, a message explains the effect. Choose Save anyway or Cancel.",
+        "Hints next to the dates point out edits that would move the Code List dates."
+    ],
+    who: "Anyone with edit access to the collection.",
+    tips: [
+        "To change what a code means from a certain date, use File > Save New Version rather than editing the dates by hand.",
+        "Cancel is always safe; nothing is saved until you choose Save anyway."
+    ],
+    related: ["de-versions", "de-export", "saving"]
 }
 );
 
@@ -394,21 +444,23 @@ window.TOPICS.push(
     area: "Data Models",
     title: "Relationship diagram",
     question: "How does the relationship diagram work?",
-    summary: "The Diagram view draws a table and its related tables, with lines for each key.",
-    keywords: ["diagram", "erd", "picture", "relationship diagram", "png", "zoom", "edges"],
-    synonyms: ["entity relationship", "draw", "visualise", "visualize", "chart of tables", "export png"],
+    summary: "The Diagram view draws the open table and its related tables as cards, with curved lines labelled with the keys that join them.",
+    keywords: ["diagram", "erd", "picture", "relationship diagram", "png", "zoom", "edges", "cards", "expanded view", "expand diagram", "full screen"],
+    synonyms: ["entity relationship", "draw", "visualise", "visualize", "chart of tables", "export png", "bigger diagram", "move tables around"],
     steps: [
         "Open a data model table and click Diagram at the top of the form.",
-        "The open table sits in the middle with its related tables around it. Lines show the keys that join them.",
-        "Scroll or use + and − to zoom, drag to move around, and click Fit to see everything.",
-        "Use the Edges list to show all lines, keys only, or only Primary, Foreign or Surrogate keys.",
-        "Hover over a line to see its details. Open a related table from the diagram to move through the model.",
-        "Click Export PNG to save the current view as an image."
+        "Each table is a card showing its name, a badge for its type (fact, dimension or view) and its fields. Key fields are tagged PK, FK or SK.",
+        "The open table sits in the middle, with related fact tables on the same row and other tables to the side. Lines show the keys that join them.",
+        "Cards show up to six fields with a “+N more” row. Hover over a card or line to highlight the keys on both ends, and click a card to open that table.",
+        "Click the expand button to open the diagram in a full window. There you can drag the background to move around, scroll to zoom, drag cards to new places, and use Fit, Reset and the zoom buttons. Close it with Escape, × or by clicking outside.",
+        "Card positions you set are kept while the app is open and also used in the smaller preview. Reset puts them back.",
+        "Use the Edges list to show all lines, keys only, or only Primary, Foreign or Surrogate keys, and click Export PNG to save the current view as an image."
     ],
     who: "Everyone. The diagram is view-only; make changes in Form view.",
     tips: [
         "If the diagram says there are no related tables yet, add some in Form view first.",
-        "Exported pictures are handy for documents and meetings."
+        "Exported pictures are handy for documents and meetings.",
+        "Use + and − on a card to show or hide the tables one more step away."
     ],
     related: ["dm-related", "dm-overview"]
 },
@@ -465,11 +517,13 @@ window.TOPICS.push(
     title: "Creating and editing a dictionary",
     question: "How do I create and edit a dictionary?",
     summary: "Edit mode lets you change a dictionary's text, add collections of elements, and set its sensitivity.",
-    keywords: ["edit dictionary", "new dictionary", "save as", "add collection", "edit mode", "sensitivity label"],
+    keywords: ["edit dictionary", "new dictionary", "save as", "add collection", "edit mode", "sensitivity label", "formatting toolbar"],
     synonyms: ["create dictionary", "change dictionary", "copy dictionary", "duplicate dictionary"],
     steps: [
         "Open a dictionary and click Edit in the title bar to turn on edit mode.",
         "Click into the editable text (for example the preamble or an element's notes) and type your changes.",
+        "One formatting toolbar is pinned just under the save status bar. It works on the rich text field you last clicked into (Disclaimer, Preamble, Appendix or Signature), and is greyed out until you click into one.",
+        "Each collection in Dictionary Contents has a search box in edit mode. Type to filter its elements.",
         "Use + Add Collection in the left panel to bring in elements from another collection. Remove a group you don't need.",
         "Click a page's sensitivity label to change it; all pages are kept in step.",
         "Save with File > Save Dictionary or Ctrl+S. File > Save As makes a copy under a new name.",
@@ -480,7 +534,7 @@ window.TOPICS.push(
         "If you try to export while in edit mode, you are asked to save and leave edit mode first so the export matches what's saved.",
         "Read-only users don't see New, Save or Save As; export is still there."
     ],
-    related: ["dict-overview", "dict-export", "ownership", "saving"]
+    related: ["dict-overview", "dict-export", "dict-search", "rich-text", "ownership", "saving"]
 },
 {
     id: "dict-export",
@@ -494,6 +548,7 @@ window.TOPICS.push(
         "Open the dictionary, then File > Export.",
         "Data Dictionary: asks whether to include Derivation Logic. Choose Include or Exclude, then pick where to save. The result is a web page you can open in a browser, print or save as PDF.",
         "Dictionary Specs: exports the specifications of the elements currently in the dictionary as JSON or CSV.",
+        "Review: saves a draft copy that reviewers can add comments to. See “How do I send a dictionary out for review?”.",
         "If you are in edit mode, choose “Save & export” when asked. The Metadata Repository app saves first and only exports once the save has worked."
     ],
     who: "Everyone.",
@@ -501,7 +556,95 @@ window.TOPICS.push(
         "Choose Exclude for derivation logic when the audience doesn't need the technical detail.",
         "Sensitivity labels are kept on the exported pages."
     ],
-    related: ["dict-overview", "export-overview", "dict-edit"]
+    related: ["dict-overview", "export-overview", "dict-edit", "dict-review-export"]
+},{
+    id: "dict-search",
+    area: "Dictionaries / Collections",
+    title: "Searching Dictionary Contents",
+    question: "How do I find an element in a big dictionary while editing?",
+    summary: "In edit mode, each collection in Dictionary Contents has its own search box that filters its elements as you type.",
+    keywords: ["dictionary search", "search collection", "dictionary contents", "find element", "filter elements", "search box"],
+    synonyms: ["search the dictionary", "find a field in a dictionary", "filter contents", "look for an element", "too many elements"],
+    steps: [
+        "Open a dictionary and click Edit to turn on edit mode.",
+        "Under each collection in Dictionary Contents there is a Search box.",
+        "Type part of an element's title or field name. The list filters as you type, and capital letters don't matter. “No matches” shows when nothing fits.",
+        "Click × or press Escape to clear the search and see every element again."
+    ],
+    who: "Anyone with edit access to the dictionary. The search boxes only appear in edit mode.",
+    tips: [
+        "Searching only hides elements on screen. It doesn't change the dictionary, its order, what you save or what you export."
+    ],
+    related: ["dict-edit", "dict-overview"]
+},
+{
+    id: "dict-review-export",
+    area: "Dictionaries / Collections",
+    title: "Sending a dictionary out for review",
+    question: "How do I send a dictionary out for review?",
+    summary: "File > Export > Review saves a draft copy of the dictionary that reviewers open in a web browser, comment on and send back.",
+    keywords: ["review", "review copy", "export review", "export for review", "draft for review", "annual review", "comments", "watermark"],
+    synonyms: ["circulate a dictionary", "send for comment", "get feedback on a dictionary", "commentable dictionary", "review round", "draft copy"],
+    steps: [
+        "Open the dictionary, then choose File > Export > Review. You can also right-click its card and choose Export for Review.",
+        "Choose where to save it. The file is named after the dictionary, the word Review and today's date.",
+        "The copy opens in any web browser. Its cover says DRAFT FOR REVIEW with a short “How to review” card, and the pages carry a light DRAFT watermark and can't be changed.",
+        "Beside each element page is a Comments box, with General comments on the Preamble page.",
+        "Email the copy to your reviewers. They add comments, save their own copy and email it back."
+    ],
+    who: "Everyone can export a review copy. Anyone with the file can comment on it.",
+    tips: [
+        "Send review copies by email. Opening them from shared online storage or a team chat doesn't keep the comments people save.",
+        "When the copies come back, combine them with Tools > Dictionary Review Merge.",
+        "The normal Data Dictionary export is unchanged."
+    ],
+    related: ["dict-review-comment", "dict-review-merge", "dict-export"]
+},
+{
+    id: "dict-review-comment",
+    area: "Dictionaries / Collections",
+    title: "Commenting on a review copy",
+    question: "How do I add comments to a dictionary review copy?",
+    summary: "Open the review copy in a web browser, use Add comment beside a page, then Save my comments and send the saved copy back.",
+    keywords: ["add comment", "comment", "comments", "reviewer", "save my comments", "review copy", "jump to commented"],
+    synonyms: ["leave a comment", "comment on a dictionary", "give feedback", "how do reviewers comment", "send my comments back"],
+    steps: [
+        "Open the review copy you were sent in a web browser.",
+        "The first time you comment, enter your name. It's shown on each of your comments.",
+        "Click Add comment in the Comments box beside a page. Choose the section it's about (and the code, for permitted values), type it and add it. You can edit or delete your own comments.",
+        "The floating panel at the bottom right shows how many comments there are and has Jump to commented, Print (with comments or pages only) and Download comments only.",
+        "Click Save my comments to save a copy of the file with your comments in it, then email that copy back as asked."
+    ],
+    who: "Anyone who receives a review copy. The Metadata Repository app isn't needed.",
+    tips: [
+        "If you close the page without saving, you're warned first, and unsaved comments can usually be restored next time you open it.",
+        "Saving again keeps the same file name pattern, ending with your name."
+    ],
+    related: ["dict-review-export", "dict-review-merge"]
+},
+{
+    id: "dict-review-merge",
+    area: "Dictionaries / Collections",
+    title: "Merging review comments",
+    question: "How do I merge review comments into one document?",
+    summary: "Tools > Dictionary Review Merge combines every reviewer's commented copy into one consolidated review copy for final comment and sign-off.",
+    keywords: ["review merge", "dictionary review merge", "merge comments", "consolidated", "combine comments", "sign-off", "tools"],
+    synonyms: ["merge reviews", "combine reviews", "collate comments", "put all comments together", "consolidate feedback", "one review document"],
+    steps: [
+        "Open Tools > Dictionary Review Merge on Home.",
+        "Drop in the commented review copies, and any comments-only files, or click browse to pick them.",
+        "A table lists each file with its commenters, comment count, dictionary, export time and status (Base, OK, Different export, Different dictionary, Unreadable or Not a review file).",
+        "Choose the base copy the pages come from. Files from another dictionary are left out unless you tick Include files from a different dictionary.",
+        "Click Merge and save. The result is a review copy marked as consolidated, showing how many reviews it was merged from, with a filter to show one commenter's comments."
+    ],
+    who: "Everyone. It's normally used by the data custodian running the review.",
+    tips: [
+        "Repeated comments are only kept once. If the same comment was edited differently, the latest edit is kept and you're warned.",
+        "Comments on elements that changed or were removed are gathered in an Unmatched comments card.",
+        "The consolidated copy still takes comments and can be merged again, so final comments can be added the same way.",
+        "Dropped files are only read for their comments; nothing in them is run."
+    ],
+    related: ["dict-review-export", "dict-review-comment", "c-custodian"]
 },
 {
     id: "collections",
@@ -1038,10 +1181,11 @@ window.TOPICS.push(
     keywords: ["export", "exports", "download", "csv", "json", "pdf", "png", "print", "copy"],
     synonyms: ["get data out", "save a copy", "report", "extract", "spreadsheet", "export options"],
     steps: [
-        "Data Elements (File > Export): Data Element (JSON or CSV), Element Specifications, Collection Specifications, Code List (CSV) and Mapping File.",
-        "Dictionaries (File > Export): Data Dictionary (print-ready document, with or without derivation logic) and Dictionary Specs (JSON or CSV).",
+        "Data Elements (File > Export): Data Element (JSON or CSV), Element Specifications, Collection Specifications, Code List (CSV, with an anomalies report when something looks wrong) and Mapping File.",
+        "Dictionaries (File > Export): Data Dictionary (print-ready document, with or without derivation logic), Dictionary Specs (JSON or CSV) and Review (a draft copy reviewers can comment on).",
+        "Tools > Dictionary Review Merge: one consolidated review copy from all the commented copies.",
         "Establishments (File menu): listed establishments as CSV or JSON, Copy for Word / Excel, and Print / Save as PDF.",
-        "Data Models (Diagram view): Export PNG of the relationship diagram.",
+        "Data Models (Diagram view, including the expanded view): Export PNG of the relationship diagram.",
         "Data Warehouse (Preview and Query tabs): Copy CSV, Export CSV and Copy TSV.",
         "Compare CSV: Only A, Only B, Diff report and Paired diffs."
     ],
@@ -1184,6 +1328,28 @@ window.TOPICS.push(
     who: "Anyone with edit access to the collection can restore data elements.",
     tips: ["Restoring brings back the element with all its versions."],
     related: ["de-delete-restore", "est-edit", "dict-edit"]
+},
+{
+    id: "rich-text",
+    area: "Everyday tasks",
+    title: "Formatting rich text",
+    question: "How do I format text in rich text fields?",
+    summary: "Rich text fields have a formatting toolbar with headings, lists, tables, links and colour, plus keyboard shortcuts, Tab for indenting and undo.",
+    keywords: ["format text", "formatting", "bold", "bullet", "bullets", "list", "indent", "tab", "paste", "undo", "redo", "heading", "rich text"],
+    synonyms: ["make text bold", "bullet points", "numbered list", "paste from word", "paste plain text", "keyboard shortcuts", "add a table", "add a link"],
+    steps: [
+        "Click into a rich text field, such as a data element's Definition or Guide for use, or a dictionary's Preamble in edit mode.",
+        "Use the toolbar buttons. Buttons light up to show the formatting where your cursor is, and hovering shows each button's name and shortcut. Heading buttons switch a heading on and off, and Undo and Redo buttons sit on the toolbar.",
+        "Tab indents or outdents in lists, adds four spaces in normal text, and moves between cells in a table. Press Escape, then Tab, to leave the field.",
+        "Pasting from Word or the web keeps basic formatting. Press Ctrl+Shift+V to paste plain text.",
+        "Links can be added, edited and removed. Unsafe links are blocked. Table edits can be undone."
+    ],
+    who: "Anyone with edit access to what they're working on.",
+    tips: [
+        "Each field remembers where your cursor was, so a new bullet list lands where you expect.",
+        "In a dictionary, the one pinned toolbar works on the rich text field you last clicked into."
+    ],
+    related: ["dict-edit", "de-open", "saving"]
 }
 );
 
@@ -1293,7 +1459,7 @@ window.TOPICS.push(
     synonyms: ["what's planned next", "what is coming", "upcoming features", "what's next", "future plans"],
     steps: [
         "Ward Mapping: shows in Home's Data menu but isn't active yet.",
-        "Reference Data is now live: ask “How do I browse Reference Data?”.",
+        "Reference Data is now live: ask “How do I browse Reference Data?” or “How do I manage Reference Data lists?”.",
         "Everything else in the menus is live.",
         "Each release's changes appear in the patch notes on Home. Ask “What changed in the latest release?” for the newest one."
     ],
@@ -1698,9 +1864,10 @@ window.TOPICS.push(
     who: "Everyone can browse. Editing, adding and deleting depend on your role.",
     tips: [
         "Cards load as you scroll, so large folders stay quick.",
-        "File > Reload folder picks up changes someone else has just saved."
+        "File > Reload folder picks up changes someone else has just saved.",
+        "Some lists are maintained in Data > Reference Data. Those are read-only here, each card has Edit in backend, and changes appear after the list is next published."
     ],
-    related: ["rd-edit", "rd-template", "est-browse"]
+    related: ["rd-edit", "rd-template", "rd-lists", "est-browse"]
 },
 {
     id: "rd-edit",
@@ -1717,7 +1884,7 @@ window.TOPICS.push(
         "To add a file, choose File > New and give it a name. A draft card appears at the top for you to fill in.",
         "To remove a file, select it and choose File > Delete. Deleted files are kept aside, so they can be restored."
     ],
-    who: "Editors and above can edit and save. Admins can also add and delete files. Nobody can change Reference Data in offline mode.",
+    who: "Editors and above can edit and save. Admins can also add and delete files. Nobody can change Reference Data in offline mode. Lists maintained in Data > Reference Data can't be changed here; see “How do I manage Reference Data lists?”.",
     tips: [
         "Finish or cancel an edit before adding, deleting or reloading.",
         "If you leave with unsaved changes, you're asked first."
@@ -1745,6 +1912,29 @@ window.TOPICS.push(
         "If a template has a problem, the folder still opens with a plain layout and a short message explains what went wrong."
     ],
     related: ["rd-browse", "rd-edit", "est-mapped"]
+},
+{
+    id: "rd-lists",
+    area: "Reference Data",
+    title: "Managing Reference Data lists",
+    question: "How do I manage Reference Data lists?",
+    summary: "Data > Reference Data is where Reference Data lists are maintained: one card per list, and an editor for adding, changing and deleting its records.",
+    keywords: ["reference data list", "lists", "data reference data", "new record", "new list", "import from library", "edit in backend", "record", "records"],
+    synonyms: ["maintain reference data", "add a code to reference data", "reference data backend", "edit a reference data list", "create a list"],
+    steps: [
+        "Open Data > Reference Data on Home. Each list shows as a card with its record count, code field, when it was last published and who owns it.",
+        "Open a list to see its records. Choose File > New record and type the new record's code. The code must be unique and can't be changed afterwards. You're warned if a deleted record used the same code.",
+        "Edit the record in the form (or Edit > Raw JSON) and choose File > Save or Ctrl+S. If someone else saved it since you opened it, you're told rather than overwriting their work.",
+        "File > Delete moves a record aside so it can be restored. Number fields that count up automatically are filled in for you and numbers are never reused.",
+        "Edit > Edit structure adds, renames or removes fields across every record, with a preview first. Removing a field needs you to confirm, and changed records are backed up.",
+        "Admins can create a list with File > New List, and copy an existing Library list in once with File > Import from Library. Import shows a dry run first and never overwrites records."
+    ],
+    who: "Editors and above can edit records, honouring the list's ownership. Admins can also create lists and import from Library. Everyone else and offline mode are read-only.",
+    tips: [
+        "Changes reach Library > Reference Data the next time the list is published.",
+        "Menus only show what your role can use, and Edit > Ownership shows who looks after the list."
+    ],
+    related: ["rd-browse", "rd-edit", "ownership", "est-list"]
 }
 );
 

@@ -13,8 +13,8 @@ tips, and (for technical topics) what is under the hood.
   storage, roles, releases). Technical topics explain concepts, technologies and patterns,
   without internal locations, names or code.
 
-Current content: **guide v1.6.2, written for Metadata Repository app release 1.3.1**
-(116 topics: 78 user topics, 35 technical topics and 3 release-notes entries). The version is recorded here only; the page has no footer.
+Current content: **guide v1.7.0, written for Metadata Repository app release 1.3.2**
+(125 topics: 86 user topics, 35 technical topics and 4 release-notes entries). The version is recorded here only; the page has no footer.
 
 ## How to use it
 
