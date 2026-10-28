@@ -5,6 +5,22 @@
 
 window.RELEASES = [
     {
+        version: "1.3.3",
+        summary: "Release 1.3.3 adds a contributor leaderboard, change history for data elements, field name aliases for other systems, and new folders for Admins and Developers.",
+        changes: [
+            "Contributor leaderboard: earn points for adding and improving content, building lists and reporting issues that get picked up, with titles and monthly and all-time boards. Open it from the leaderboard card in the phone's Profile app.",
+            "Data Elements: File > History… shows who saved each new version, deleted or restored an element, when, why and what changed. Save New Version asks for an optional reason, and Delete asks for a required one.",
+            "Data Elements: Deleted Items shows who deleted each element, when and why, and version headings show who saved them.",
+            "Data Elements: a save is refused, with an offer to reload, if someone else saved the element after you opened it.",
+            "Data Elements: Save New Version now works without changes, for recording a past change by hand.",
+            "Data Elements: a new FIELD NAME ALIASES table records the names other systems use for a field.",
+            "Dictionaries: Field names from, in edit mode, shows one system's aliases in place of field names, and the edit-mode search also finds elements by field name alias.",
+            "Admins and Developers: + New Folder creates a new dictionary folder or data element collection.",
+            "New element numbers are never reused from deleted elements, and an empty collection now says so instead of showing the last element.",
+            "Tables in the element form now keep quotes and other special characters in their values correctly."
+        ]
+    },
+    {
         version: "1.3.2",
         summary: "Release 1.3.2 adds a review round for dictionaries (a commentable Review export and Dictionary Review Merge), easier dictionary editing, a new relationship diagram, safer Code List dates and Data > Reference Data.",
         changes: [

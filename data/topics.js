@@ -4,8 +4,8 @@
    See README.md for the field list and how to add a topic. */
 
 window.GUIDE_META = {
-    appRelease: "1.3.2",   // the app release this content describes (not shown on the page)
-    updated: "26 Oct 2026"
+    appRelease: "1.3.3",   // the app release this content describes (not shown on the page)
+    updated: "28 Oct 2026"
 };
 
 window.TOPIC_AREAS = [
@@ -290,7 +290,10 @@ window.TOPICS.push(
         "The version that was current is closed off the day before today, so the two never overlap.",
         "If the newest version already starts today, a second Save New Version on the same day offers “Update today's version” instead, so no version ends before it starts.",
         "Save New Version is refused while the newest version starts in the future. Fix its From date first.",
-        "Save New Version only works after you have changed something, and not while you are still creating a brand-new element (save that normally first).",
+        "Save New Version asks for a reason, which is optional and kept in File > History…. Cancel saves nothing.",
+        "Save New Version works even if you haven't changed anything, for example to record a past change by hand. A plain Save still says there is nothing to save. If the newest version already starts today and nothing has changed, there is nothing to save either.",
+        "Save New Version isn't available while you are still creating a brand-new element. Save that normally first.",
+        "If someone else saved the element after you opened it, Save and Save New Version are refused and you are offered Reload, so neither of you overwrites the other.",
         "Dates are always shown and saved as year-month-day, whatever your computer's regional settings."
     ],
     who: "Anyone with edit access to the collection.",
@@ -299,7 +302,7 @@ window.TOPICS.push(
         "If you saved a new version by mistake, ask the collection's custodian for help rather than deleting the element.",
         "Version dates also set the dates in the Code List export. See “Why am I warned about version dates when I save?”."
     ],
-    related: ["de-open", "saving", "de-delete-restore", "de-version-dates"]
+    related: ["de-open", "saving", "de-delete-restore", "de-version-dates", "de-history"]
 },
 {
     id: "de-delete-restore",
@@ -310,18 +313,19 @@ window.TOPICS.push(
     keywords: ["delete", "restore", "deleted items", "undo delete", "recover", "bin", "remove element"],
     synonyms: ["recycle bin", "undelete", "get back", "lost element", "trash"],
     steps: [
-        "Open the element and choose File > Delete. Confirm when asked.",
+        "Open the element and choose File > Delete, then type a reason. The reason is required: leaving it blank or choosing Cancel deletes nothing.",
         "The element is moved to its collection's deleted area. It is not permanently removed.",
-        "To bring it back, choose File > Deleted Items. A list shows each deleted element and when it was deleted.",
+        "To bring it back, choose File > Deleted Items. A list shows each deleted element, who deleted it, when and why.",
         "Click Restore beside the one you want.",
         "If a live element is already in the same place, the Metadata Repository app offers “Rename & Restore” so both are kept."
     ],
     who: "Anyone with edit access to the collection.",
     tips: [
         "A new element that hasn't been saved yet can't be deleted. Just discard it.",
-        "Deleted Items only lists the collection you have open."
+        "Deleted Items only lists the collection you have open.",
+        "Deletes and restores are also listed in File > History… for that element."
     ],
-    related: ["de-open", "de-versions", "ownership"]
+    related: ["de-open", "de-versions", "de-history", "ownership"]
 },
 {
     id: "de-export",
@@ -389,6 +393,51 @@ window.TOPICS.push(
         "Cancel is always safe; nothing is saved until you choose Save anyway."
     ],
     related: ["de-versions", "de-export", "saving"]
+},
+{
+    id: "de-history",
+    area: "Data Elements",
+    title: "Change history for data elements",
+    question: "How do I see who changed a data element and why?",
+    summary: "File > History… lists every new version, delete and restore of a data element, with who did it, when, the reason and what changed.",
+    keywords: ["history", "change history", "audit", "audit log", "reason", "who changed", "what changed", "saved by"],
+    synonyms: ["who changed this", "why was this changed", "change log", "track changes", "see previous changes", "who deleted it", "file history"],
+    steps: [
+        "Open the element and choose File > History…. Entries are listed newest first, in your local time.",
+        "Each entry shows the action (a new version, an update to today's version, a delete or a restore), who did it, when, and the reason they gave.",
+        "Click Show changes on a new-version entry to see each field that changed, with its old and new value. Permitted values show the codes added, removed or changed, and formatting-only changes are labelled as such.",
+        "Save New Version asks for a reason, which is optional. File > Delete asks for a reason, which is required.",
+        "Hover over a version heading in the form to see who saved that version, when and why."
+    ],
+    who: "Everyone can view History, including read-only users. The reasons come from whoever saved the new version or deleted the element.",
+    tips: [
+        "A plain File > Save isn't recorded. Use Save New Version when you want the change and its reason kept.",
+        "History starts from release 1.3.3, so earlier changes aren't listed.",
+        "Data Model Elements have the same File > History…."
+    ],
+    related: ["de-versions", "de-delete-restore", "trouble-overwritten"]
+},
+{
+    id: "de-field-aliases",
+    area: "Data Elements",
+    title: "Field name aliases",
+    question: "How do I record another system's name for a field?",
+    summary: "The FIELD NAME ALIASES table on a data element holds the names other systems use for the same field, one row per system.",
+    keywords: ["alias", "aliases", "field name alias", "field name aliases", "system", "other system"],
+    synonyms: ["record another system's name", "another system's name for a field", "another name for a field", "different field name", "what another system calls it", "alternative field name", "source system name"],
+    steps: [
+        "Open the element. The FIELD NAME ALIASES table sits directly under FIELD NAME.",
+        "Add a row for each system: type the Alias (that system's name for the field) and the System. The System cell suggests systems you've used before.",
+        "Save with File > Save or File > Save New Version. Aliases are kept on older versions too.",
+        "A dictionary can then show one system's aliases in place of the field name. See “How do I show another system's field names in a dictionary?”."
+    ],
+    who: "Anyone with edit access to the collection. Everyone can see aliases.",
+    tips: [
+        "Spell each system the same way every time so dictionaries can find it. Capital letters and extra spaces don't matter.",
+        "Metabot Insight notes an alias with no system, a system with no alias, or the same system listed twice.",
+        "Metabot can find elements by alias or system."
+    ],
+    related: ["de-open", "dict-field-names", "insight"]
 }
 );
 
@@ -524,6 +573,7 @@ window.TOPICS.push(
         "Click into the editable text (for example the preamble or an element's notes) and type your changes.",
         "One formatting toolbar is pinned just under the save status bar. It works on the rich text field you last clicked into (Disclaimer, Preamble, Appendix or Signature), and is greyed out until you click into one.",
         "Each collection in Dictionary Contents has a search box in edit mode. Type to filter its elements.",
+        "Field names from, above the element list, chooses whether pages show each element's own field name or one system's alias. See “How do I show another system's field names in a dictionary?”.",
         "Use + Add Collection in the left panel to bring in elements from another collection. Remove a group you don't need.",
         "Click a page's sensitivity label to change it; all pages are kept in step.",
         "Save with File > Save Dictionary or Ctrl+S. File > Save As makes a copy under a new name.",
@@ -534,7 +584,7 @@ window.TOPICS.push(
         "If you try to export while in edit mode, you are asked to save and leave edit mode first so the export matches what's saved.",
         "Read-only users don't see New, Save or Save As; export is still there."
     ],
-    related: ["dict-overview", "dict-export", "dict-search", "rich-text", "ownership", "saving"]
+    related: ["dict-overview", "dict-export", "dict-search", "rich-text", "ownership", "saving", "dict-field-names"]
 },
 {
     id: "dict-export",
@@ -568,7 +618,7 @@ window.TOPICS.push(
     steps: [
         "Open a dictionary and click Edit to turn on edit mode.",
         "Under each collection in Dictionary Contents there is a Search box.",
-        "Type part of an element's title or field name. The list filters as you type, and capital letters don't matter. “No matches” shows when nothing fits.",
+        "Type part of an element's title, field name or field name alias. The list filters as you type, and capital letters don't matter. “No matches” shows when nothing fits.",
         "Click × or press Escape to clear the search and see every element again."
     ],
     who: "Anyone with edit access to the dictionary. The search boxes only appear in edit mode.",
@@ -576,6 +626,51 @@ window.TOPICS.push(
         "Searching only hides elements on screen. It doesn't change the dictionary, its order, what you save or what you export."
     ],
     related: ["dict-edit", "dict-overview"]
+},
+{
+    id: "dict-field-names",
+    area: "Dictionaries / Collections",
+    title: "Showing another system's field names",
+    question: "How do I show another system's field names in a dictionary?",
+    summary: "In edit mode, Field names from chooses whether a dictionary shows each element's own field name or one system's alias.",
+    keywords: ["field names from", "alias", "aliases", "field name alias", "default field name", "default name", "system names"],
+    synonyms: ["use another system's names", "show aliases", "rename field names in a dictionary", "different field names in a dictionary", "dictionary for another system"],
+    steps: [
+        "Open the dictionary and click Edit.",
+        "Above the element list, pick a system in Field names from. It offers Default field name plus every system found on the dictionary's elements.",
+        "Each page's “Field name:” row now shows that system's alias. Elements with no alias for that system keep their own field name, and the sidebar marks them with a small “default name” tag (the tag isn't exported).",
+        "Save the dictionary. The choice is saved with it and used in the Data Dictionary and Review exports.",
+        "To keep both, use File > Save As to save the alias version as a separate dictionary."
+    ],
+    who: "Anyone with edit access to the dictionary. Everyone sees the names it was saved with.",
+    tips: [
+        "Dictionary Specs use the chosen names too. If the choice hasn't been saved yet, you're asked to save first.",
+        "Code List and Mapping File exports always use each element's own field name.",
+        "Aliases are added on the data element itself. See “How do I record another system's name for a field?”."
+    ],
+    related: ["dict-edit", "de-field-aliases", "dict-export"]
+},
+{
+    id: "new-folder",
+    area: "Dictionaries / Collections",
+    title: "Creating a new collection or dictionary folder",
+    question: "How do I create a new collection or dictionary folder?",
+    summary: "Admins and Developers can add a folder with + New Folder: a dictionary folder from Library > Dictionaries, or a data element collection from Metadata > Data Elements.",
+    keywords: ["new folder", "create folder", "new collection", "create collection", "new dictionary folder", "add folder"],
+    synonyms: ["make a new collection", "add a collection", "add a dictionary folder", "set up a new collection", "start a new data collection"],
+    steps: [
+        "Open Library > Dictionaries for a dictionary folder, or Metadata > Data Elements for a collection.",
+        "Click + New Folder.",
+        "Choose Data Collections or Reference Data, then type a name. Suggestions show names that exist on the other side, such as collections that don't have a dictionary folder yet.",
+        "Names can be up to 80 characters, can't use characters Windows doesn't allow in folder names, and can't repeat a name already in that group (capital letters don't matter).",
+        "The list refreshes and the new card is highlighted. A new dictionary folder starts with one blank dictionary ready to edit. A new collection starts empty, so use File > New to add its first element."
+    ],
+    who: "Admins and Developers only. The button is hidden for everyone else and isn't available offline.",
+    tips: [
+        "A new collection has no owners, so only Admins and Developers can edit it until custodians or editors are added.",
+        "A dictionary folder takes its owners from the collection with the same name, so use matching names."
+    ],
+    related: ["collections", "dict-edit", "ownership", "task-new-element"]
 },
 {
     id: "dict-review-export",
@@ -1034,12 +1129,13 @@ window.TOPICS.push(
     area: "Phone apps",
     title: "Profile",
     question: "What does the Profile app show?",
-    summary: "The Profile app shows your name and role, the collections you look after, and your ownership requests.",
-    keywords: ["profile", "my collections", "my requests", "my role", "refresh"],
+    summary: "The Profile app shows your name and role, your leaderboard points and title, the collections you look after, and your ownership requests.",
+    keywords: ["profile", "points", "my points", "my collections", "my requests", "my role", "refresh"],
     synonyms: ["who am i", "what role do i have", "my access", "collections i own"],
     steps: [
         "Open the Profile app on the phone.",
         "The top shows your name and your role.",
+        "The leaderboard card shows your title and badge, your points and rank this month and all time, and progress to the next title. Click View leaderboard to see the full board.",
         "My collections lists every collection where you are a custodian, co-custodian, editor or steward, with your role in each. Click one to open it.",
         "My requests lists your ownership requests and whether they are pending, approved or declined.",
         "Click Refresh to load the latest details."
@@ -1049,7 +1145,31 @@ window.TOPICS.push(
         "When offline, Profile shows the last copy it saved, with the time it was made.",
         "Clear cached data in Settings if your profile looks out of date."
     ],
-    related: ["roles", "ownership", "ownership-requests", "phone-settings"]
+    related: ["roles", "ownership", "ownership-requests", "phone-settings", "leaderboard"]
+},
+{
+    id: "leaderboard",
+    area: "Phone apps",
+    title: "Contributor leaderboard",
+    question: "How does the contributor leaderboard work?",
+    summary: "You earn points for adding and improving content, building lists and reporting issues that get picked up, and the leaderboard ranks everyone by month and all time.",
+    keywords: ["leaderboard", "points", "score", "rank", "ranking", "title", "badge", "contributor of the month", "top contributor"],
+    synonyms: ["how do i earn points", "my score", "who contributes most", "contributor ranking", "league table", "how are points worked out"],
+    steps: [
+        "Open the Profile app on the phone. Its leaderboard card shows your title and badge, your points and rank this month and all time, and a bar showing progress to the next title.",
+        "Click View leaderboard to open the full board. If your page has unsaved changes, you're asked before leaving.",
+        "Choose Monthly (and pick an earlier month from the list if you like) or All time. You'll see the contributor of the month or the top contributor, a podium, and the ranked list with your own row highlighted.",
+        "Click a row to see that person's points by activity and their progress to the next title.",
+        "Open How points work at the bottom of the board for the current point values."
+    ],
+    who: "Everyone.",
+    tips: [
+        "Points come from new and changed data elements, dictionaries and data models, new and edited establishments and Reference Data records, new Metadata Lookup entries, builds, and bug reports or feature requests once they're picked up. Exports and restores earn nothing.",
+        "A save only counts if the content really changed. Each item scores once per activity per day, there's a daily cap, and an item deleted within a week of being created loses its points.",
+        "Titles run from Newcomer through Contributor, Cataloguer, Curator, Archivist, Librarian and Metadata Sage to Legend of the Repository.",
+        "Scores refresh every few minutes. When you're offline, the last saved scores are shown."
+    ],
+    related: ["profile", "feedback"]
 },
 {
     id: "phone-settings",
@@ -1096,7 +1216,8 @@ window.TOPICS.push(
     who: "Everyone.",
     tips: [
         "You can also just tell Metabot “file a bug: ...” and it will file it for you.",
-        "A snip of the exact screen saves a lot of back-and-forth."
+        "A snip of the exact screen saves a lot of back-and-forth.",
+        "A bug report or feature request earns contributor leaderboard points once it moves to In Progress or Completed."
     ],
     related: ["mail", "camera-gallery", "metabot"]
 },
@@ -1281,13 +1402,14 @@ window.TOPICS.push(
         "Choose File > New. A blank form opens on the right.",
         "Fill in the details: title, field name, definition, data type, format, size, requirement status, permitted values and any guide for use, examples or notes.",
         "Save with Ctrl+S or File > Save. The status shows “Creating…”, then “Created successfully”.",
-        "The element is added to the collection with the next free number and appears in the left list under its title.",
+        "The element is added to the collection with the next number after every existing and deleted element (so a deleted element's number is never reused) and appears in the left list under its title.",
         "Save New Version isn't available until the new element has been saved once."
     ],
     who: "Anyone with edit access to the collection: its custodians and editors, or an Admin.",
     tips: [
         "If File > New is missing, you're read-only for that collection. See “Why can't I edit this?”.",
-        "Data Model Element collections work the same way from Metadata > Data Model Elements."
+        "Data Model Element collections work the same way from Metadata > Data Model Elements.",
+        "A brand-new collection shows “This collection has no elements yet”. Use File > New to add the first one."
     ],
     related: ["de-open", "de-versions", "trouble-cant-edit"]
 },
@@ -1407,11 +1529,13 @@ window.TOPICS.push(
     area: "Troubleshooting",
     title: "When someone else's save overwrote yours",
     question: "Someone else's save overwrote mine",
-    summary: "For most records the last save wins: if two people edit the same item, the later save replaces the earlier one. Establishments are the exception and warn you instead.",
+    summary: "Data elements and establishments check for this and refuse a save that would overwrite someone else's. For other records, such as data models and dictionaries, the last save wins.",
     keywords: ["troubleshooting", "overwrote", "overwritten", "overwrite", "last save wins", "conflict", "same time", "lost edit"],
     synonyms: ["someone overwrote my changes", "two people editing", "my edit was replaced", "who saved last"],
     steps: [
-        "There's no locking. If two people have the same data element, data model or dictionary open, whoever saves last replaces the other person's changes.",
+        "There's no locking. If two people have the same data model or dictionary open, whoever saves last replaces the other person's changes.",
+        "Data elements check for this: if someone else saved the element after you opened it, Save and Save New Version are refused with “Not saved: changed by someone else”. Choose Reload to load their version (copy anything you need first, because your unsaved edits are lost), then reapply your change.",
+        "File > History… on a data element shows who saved each new version and why.",
         "Save corrects the current version in place, so an overwritten correction has to be made again. Earlier versions created with Save New Version are kept.",
         "Establishments check for this: if the record changed since you opened it, your save is refused and you can Reload values and reapply your change.",
         "To recover lost work, redo the change, or ask an Admin if it was significant.",
@@ -1421,7 +1545,7 @@ window.TOPICS.push(
     tips: [
         "Reopen an item before editing it if it's been open for a long time, so you start from the latest copy."
     ],
-    related: ["watch-subscriptions", "t-concurrency", "trouble-not-saved", "de-versions"]
+    related: ["watch-subscriptions", "t-concurrency", "trouble-not-saved", "de-versions", "de-history"]
 },
 {
     id: "trouble-slow",

@@ -553,10 +553,10 @@ window.TOPICS.push(
     keywords: ["storage", "data storage", "repository", "shared folder", "files", "database", "where is data", "folder structure", "manifest", "index"],
     synonyms: ["where is the data kept", "is there a database", "how is data saved", "file storage", "data layer"],
     steps: [
-        "Configuration area: the roles list, per-user folders (profile, subscriptions, direct messages), the ownership request queue and audit log, and the published patch notes.",
+        "Configuration area: the roles list, per-user folders (profile, subscriptions, direct messages), the ownership request queue and audit log, the published patch notes, app-wide settings, and the contributor leaderboard's append-only activity records with their scoring rules.",
         "Content area, by category: data elements and Data Model Elements (one folder per collection), data models, dictionaries grouped by category, the Establishment List folders and their combined front-end record, the glossary, user feedback, and templates.",
         "Inside a collection: one JSON file per item, named by a number. Data element files hold every version.",
-        "Each collection has a small hidden folder beside its items for its index (so lists load quickly without opening every file) and its ownership record.",
+        "Each collection has a small hidden folder beside its items for its index (so lists load quickly without opening every file), its ownership record, and an append-only change history per element (one JSON object per line).",
         "Deleted items go to a deleted area inside the same collection, so they keep their context and can be restored.",
         "The SQL Server data the Data Warehouse shows is separate. The Metadata Repository app only reads it."
     ],
@@ -565,7 +565,7 @@ window.TOPICS.push(
         "Because everything is files, the shared folder's own backups and permissions protect the data.",
         "Indexes are rebuilt by the host after deletes, restores and some saves."
     ],
-    under: ["File-based repository", "JSON per item", "Per-collection index", "Per-collection ownership record", "Soft-delete folders"],
+    under: ["File-based repository", "JSON per item", "Per-collection index", "Per-collection ownership record", "Soft-delete folders", "Append-only JSON Lines logs"],
     related: ["t-concurrency", "t-offline-cache", "t-json", "t-architecture"]
 },
 {
@@ -574,11 +574,12 @@ window.TOPICS.push(
     area: "Tech: Data & storage",
     title: "Concurrency and safe writes",
     question: "How do concurrency and safe writes work?",
-    summary: "There is no locking: for most records the last save wins. Establishment edits detect conflicts and use safe write-then-swap file writes.",
+    summary: "There is no locking. Data element and establishment saves detect conflicts and use safe write-then-swap file writes; for other records the last save wins.",
     keywords: ["concurrency", "locking", "lock", "last save wins", "last write wins", "conflict", "simultaneous", "atomic", "race"],
     synonyms: ["two people editing", "same time", "overwrite", "conflict detection", "who wins"],
     steps: [
-        "Every PC writes straight to the shared folder, and there is no central lock. If two people save the same data element, the later save replaces the earlier one.",
+        "Every PC writes straight to the shared folder, and there is no central lock. For data models and dictionaries, if two people save the same item, the later save replaces the earlier one.",
+        "Data element saves carry a content hash of what was loaded. If the file on disk no longer matches, Save and Save New Version are refused and the user is offered Reload. Saves are written to a temporary file and then swapped into place.",
         "Shared lists such as direct messages, feedback and the roles file are read, changed and written whole, so the same last-save-wins rule applies.",
         "Establishment edits are safer. When a form opens, the host records a stamp for each file behind it. On save, if any file changed in the meantime, the save is refused and you are offered Reload values.",
         "Establishment and ownership writes go to a temporary file first and then swap it into place, so a dropped connection can't leave a half-written file. Multi-file changes are all-or-nothing with rollback.",
@@ -589,7 +590,7 @@ window.TOPICS.push(
         "Agree who edits what. Ownership (custodians and editors) narrows the set of people who can write a collection, which lowers the chance of clashes.",
         "Watching an item tells you within about 15 seconds when someone else changed it."
     ],
-    under: ["Last-writer-wins", "Optimistic concurrency stamps", "Write-temp-then-replace", "All-or-nothing with rollback", "Backups"],
+    under: ["Last-writer-wins", "Optimistic concurrency stamps", "Write-temp-then-replace", "All-or-nothing with rollback", "Backups", "Content-hash conflict checks"],
     related: ["t-storage", "t-editing-flow", "est-edit"]
 },
 {
